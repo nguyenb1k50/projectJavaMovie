@@ -4,16 +4,16 @@ public class UserDto {
  
 	private String id;
 	private String email;
-	private String fullname;
+	private String username;
 	private String roleName;
 	
 	public UserDto() {}
 	
-	public UserDto(String id, String email, String fullname, String roleName) {
+	public UserDto(String id, String email, String username, String roleName) {
 		super();
 		this.id = id;
 		this.email = email;
-		this.fullname = fullname;
+		this.username = username;
 		this.roleName = roleName;
 	}
 	public String getId() {
@@ -28,11 +28,11 @@ public class UserDto {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getFullname() {
-		return fullname;
+	public String getUsername() {
+		return username;
 	}
-	public void setFullname(String fullname) {
-		this.fullname = fullname;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	public String getRoleName() {
 		return roleName;

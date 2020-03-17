@@ -8,20 +8,20 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.myclass.dto.UserDto;
-import com.myclass.entity.User;
+import com.myclass.entity.UserDTO;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, String> {
+public interface UserRepository extends JpaRepository<UserDTO, String> {
 
-	User findByEmail(String email);
+	UserDTO findByEmail(String email);
 	
-	List<User> findByFullname(String fullname);
+	UserDTO findByUsername(String username);
 	
-	User findByAddress(String address);
+	UserDTO findByAddress(String address);
 	
-	@Query("SELECT u FROM User u WHERE u.fullname = :name OR u.email = :email")
-	List<User> search(@Param("name")  String fullname, @Param("email") String email);
+	@Query("SELECT u FROM UserDTO u WHERE u.username = :name OR u.email = :email")
+	List<UserDTO> search(@Param("name")  String username, @Param("email") String email);
 	
-	@Query("SELECT new com.myclass.dto.UserDto(u.id, u.email, u.fullname, r.description) FROM User u JOIN u.role r")
+	@Query("SELECT new com.myclass.dto.UserDto(u.id, u.email, u.username, r.description) FROM UserDTO u JOIN u.role r")
 	List<UserDto> getAllDTO();
 }

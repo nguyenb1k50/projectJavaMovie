@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myclass.dto.UserDto;
-import com.myclass.entity.User;
+import com.myclass.entity.UserDTO;
 import com.myclass.repository.UserRepository;
 
 @RestController
@@ -28,8 +28,8 @@ public class UserController {
 	
 	@GetMapping("")
 	public Object get() {
-		List<User> users = userRepository.findAll();
-		return new ResponseEntity<List<User>>(users, HttpStatus.OK);
+		List<UserDTO> users = userRepository.findAll();
+		return new ResponseEntity<List<UserDTO>>(users, HttpStatus.OK);
 	}
 	
 	@GetMapping("/getDto")
@@ -40,34 +40,34 @@ public class UserController {
 	
 	@GetMapping("/{id}")
 	public Object get(@PathVariable String id) {
-		User user = userRepository.findById(id).get();
-		return new ResponseEntity<User>(user, HttpStatus.OK);
+		UserDTO user = userRepository.findById(id).get();
+		return new ResponseEntity<UserDTO>(user, HttpStatus.OK);
 	}
 	
-	@GetMapping("/search/{email}/{fullname}")
-	public Object getByEmail(@PathVariable String email, @PathVariable String fullname) {
+	@GetMapping("/search/{email}/{username}")
+	public Object getByEmail(@PathVariable String email, @PathVariable String username) {
 		
-		List<User> user = userRepository.search(fullname, email);
+		List<UserDTO> user = userRepository.search(username, email);
 		
 		return new ResponseEntity<Object>(user, HttpStatus.OK);
 	}
 	
 	@PostMapping("")
-	public Object post(@RequestBody User user) {
+	public Object post(@RequestBody UserDTO user) {
 		
 		user.setId(UUID.randomUUID().toString());
-		User entity = userRepository.save(user);
+		UserDTO entity = userRepository.save(user);
 		
-		return new ResponseEntity<User>(entity, HttpStatus.CREATED);
+		return new ResponseEntity<UserDTO>(entity, HttpStatus.CREATED);
 	}
 	
 	@PutMapping("/{id}")
-	public Object post(@PathVariable String id, @RequestBody User user) {
+	public Object post(@PathVariable String id, @RequestBody UserDTO user) {
 		
 		if(userRepository.existsById(id)) {
 			user.setId(id);
-			User entity = userRepository.save(user);
-			return new ResponseEntity<User>(entity, HttpStatus.OK);	
+			UserDTO entity = userRepository.save(user);
+			return new ResponseEntity<UserDTO>(entity, HttpStatus.OK);	
 		}
 		return new ResponseEntity<String>("Id không tồn tại!", HttpStatus.BAD_REQUEST);
 	}

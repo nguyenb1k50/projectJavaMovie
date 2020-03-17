@@ -34,7 +34,7 @@ private String userId;
 @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name="fk_booking_user"),
 insertable = false, updatable = false)
 @JsonIgnore
-private User user;
+private UserDTO user;
 
 public String getId() {
 	return id;
@@ -68,11 +68,11 @@ public void setUserId(String userId) {
 	this.userId = userId;
 }
 
-public User getUser() {
+public UserDTO getUser() {
 	return user;
 }
 
-public void setUser(User user) {
+public void setUser(UserDTO user) {
 	this.user = user;
 }
 
@@ -80,7 +80,7 @@ public Booking() {
 	super();
 }
 
-public Booking(String id, String movieId, Movie movie, String userId, User user) {
+public Booking(String id, String movieId, Movie movie, String userId, UserDTO user) {
 	super();
 	this.id = id;
 	this.movieId = movieId;

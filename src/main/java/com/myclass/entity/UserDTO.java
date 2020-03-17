@@ -16,11 +16,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="users")
-public class User {
+public class UserDTO {
 	@Id
 	private String id;
 	private String email;
-	private String fullname;
+	private String username;
 	private String password;
 	private String avatar;
 	private String phone;
@@ -48,14 +48,14 @@ public class User {
 	@OneToMany(mappedBy="user", fetch = FetchType.LAZY)
 	private List<Booking> bookings;
 
-	public User() {}
+	public UserDTO() {}
 
-	public User(String id, String email, String fullname, String password, String avatar, String phone, String address,
+	public UserDTO(String id, String email, String username, String password, String avatar, String phone, String address,
 			String website, String facebook, String roleId) {
 		super();
 		this.id = id;
 		this.email = email;
-		this.fullname = fullname;
+		this.username = username;
 		this.password = password;
 		this.avatar = avatar;
 		this.phone = phone;
@@ -81,12 +81,12 @@ public class User {
 		this.email = email;
 	}
 
-	public String getFullname() {
-		return fullname;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setFullname(String fullname) {
-		this.fullname = fullname;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getPassword() {
