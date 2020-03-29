@@ -1,6 +1,4 @@
 package com.myclass.entity;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -26,7 +24,7 @@ public class Movie {
 	//"poster": "https://m.media-amazon.com/images/M/MV5BMjIwMDIwNjAyOF5BMl5BanBnXkFtZTgwNDE1MDc2NTM@._V1_SX300.jpg",
 	private String poster;
 	private String director;
-    private ArrayList<Person> actors;
+    private String[] actors;
 	private String title;
 	private int duration;
 	private String language;
@@ -47,12 +45,12 @@ public class Movie {
 	private List<Calendar> calendars;
 
 	
-    public ArrayList<Person> getActors() {
+    public String[] getActors() {
         return actors;
     }
 
-    public void setActors(ArrayList<Person> actors) {
-        this.actors = (ArrayList<Person>) actors;
+    public void setActors(String[] actors) {
+        this.actors = actors;
     }
 	
 	public String getId() {
@@ -129,7 +127,7 @@ public class Movie {
 
 
 
-	public Movie(String id, String imdbId, int imdbRating, String poster, String director, ArrayList<Person> actors,
+	public Movie(String id, String imdbId, int imdbRating, String poster, String director, String[] actors,
 			String title, int duration, String language, String description, String traller_url, String country,
 			String catagoryId, Catagory catagory, List<Calendar> calendars) {
 		super();
