@@ -40,7 +40,7 @@ public class CatagoryController {
 		}
 	}
 	
-	@PutMapping("Catagory/{id}")
+	@PutMapping("/{id}")
 	public Object post(@PathVariable String id, @RequestBody Catagory catagory) {
 		
 		if(catagoryRepository.existsById(id)) {
