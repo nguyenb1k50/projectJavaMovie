@@ -1,6 +1,8 @@
 package com.myclass.controller;
+
 import java.util.List;
 import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,54 +14,53 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.myclass.entity.Catagory;
-import com.myclass.repository.CatagoryRepository;
+import com.myclass.entity.Movie;
+import com.myclass.repository.MovieRepository;
 
 @RestController
-@RequestMapping("api/catagory")
-public class CatagoryController {
-
+@RequestMapping("api/movie")
+public class MovieController {
+	
 	@Autowired
-	CatagoryRepository catagoryRepository;
+	MovieRepository movieRepository;
 	
 	@GetMapping("")
 	public Object get() {
-		List<Catagory> catagories = catagoryRepository.getAllCatagory();
-		return new ResponseEntity<List<Catagory>>(catagories, HttpStatus.OK);
+		List<Movie> movies = movieRepository.getAllMovie();
+		return new ResponseEntity<List<Movie>>(movies, HttpStatus.OK);
 	}
 	
 	@PostMapping()
-	public Object post(@RequestBody Catagory catagory) {
-		Boolean p = catagoryRepository.existsByTitle(catagory.getTitle());
+	public Object post(@RequestBody Movie movie) {
+		Boolean p = movieRepository.existsByTitle(movie.getTitle());
 		if(!p) {
-			catagory.setId(UUID.randomUUID().toString());
-			Catagory entity = catagoryRepository.save(catagory);
-			return new ResponseEntity<Catagory>(entity, HttpStatus.CREATED);
+			movie.setId(UUID.randomUUID().toString());
+			Movie entity = movieRepository.save(movie);
+			return new ResponseEntity<Movie>(entity, HttpStatus.CREATED);
 		} else {
-			return new ResponseEntity<String>("Catagory exist",HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>("Movie's Title exist",HttpStatus.BAD_REQUEST);
 		}
 	}
 	
 	@PutMapping("/{id}")
-	public Object post(@PathVariable String id, @RequestBody Catagory catagory) {
+	public Object post(@PathVariable String id, @RequestBody Movie movie) {
 		
-		if(catagoryRepository.existsById(id)) {
-			catagory.setId(id);
-			Catagory entity = catagoryRepository.save(catagory);
-			return new ResponseEntity<Catagory>(entity, HttpStatus.OK);	
+		if(movieRepository.existsById(id)) {
+			movie.setId(id);
+			Movie entity = movieRepository.save(movie);
+			return new ResponseEntity<Movie>(entity, HttpStatus.OK);	
 		}
 		return new ResponseEntity<String>("Id không tồn tại!", HttpStatus.BAD_REQUEST);
 	}
-	
 	
 	@DeleteMapping("/{id}")
 	public Object delete(@PathVariable String id) {
 		
-		if(catagoryRepository.existsById(id)) {
-			catagoryRepository.deleteById(id);
+		if(movieRepository.existsById(id)) {
+			movieRepository.deleteById(id);
 			return new ResponseEntity<HttpStatus>(HttpStatus.NO_CONTENT);	
 		}
 		return new ResponseEntity<String>("Id không tồn tại!", HttpStatus.BAD_REQUEST);
 	}
-	
+
 }
