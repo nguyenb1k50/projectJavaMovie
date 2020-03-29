@@ -1,5 +1,6 @@
 package com.myclass.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -19,6 +20,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Movie {
 	@Id
 	private String id;
+	private String imdbId;
+	private int imdbRating;
+	
+	//"poster": "https://m.media-amazon.com/images/M/MV5BMjIwMDIwNjAyOF5BMl5BanBnXkFtZTgwNDE1MDc2NTM@._V1_SX300.jpg",
+	private String poster;
+	private String director;
+    private ArrayList<Person> actors;
 	private String title;
 	private int duration;
 	private String language;
@@ -37,6 +45,15 @@ public class Movie {
 	
 	@OneToMany(mappedBy="movie", fetch = FetchType.LAZY)
 	private List<Calendar> calendars;
+
+	
+    public ArrayList<Person> getActors() {
+        return actors;
+    }
+
+    public void setActors(ArrayList<Person> actors) {
+        this.actors = (ArrayList<Person>) actors;
+    }
 	
 	public String getId() {
 		return id;
@@ -110,10 +127,18 @@ public class Movie {
 		this.catagory = catagory;
 	}
 
-	public Movie(String id, String title, int duration, String language, String description, String traller_url,
-			String country, String catagoryId, Catagory catagory) {
+
+
+	public Movie(String id, String imdbId, int imdbRating, String poster, String director, ArrayList<Person> actors,
+			String title, int duration, String language, String description, String traller_url, String country,
+			String catagoryId, Catagory catagory, List<Calendar> calendars) {
 		super();
 		this.id = id;
+		this.setImdbId(imdbId);
+		this.setImdbRating(imdbRating);
+		this.setPoster(poster);
+		this.setDirector(director);
+		this.actors = actors;
 		this.title = title;
 		this.duration = duration;
 		this.language = language;
@@ -122,10 +147,43 @@ public class Movie {
 		this.country = country;
 		this.catagoryId = catagoryId;
 		this.catagory = catagory;
+		this.calendars = calendars;
 	}
 
 	public Movie() {
 		super();
+	}
+
+	public String getImdbId() {
+		return imdbId;
+	}
+
+	public void setImdbId(String imdbId) {
+		this.imdbId = imdbId;
+	}
+
+	public String getPoster() {
+		return poster;
+	}
+
+	public void setPoster(String poster) {
+		this.poster = poster;
+	}
+
+	public String getDirector() {
+		return director;
+	}
+
+	public void setDirector(String director) {
+		this.director = director;
+	}
+
+	public int getImdbRating() {
+		return imdbRating;
+	}
+
+	public void setImdbRating(int imdbRating) {
+		this.imdbRating = imdbRating;
 	}
 
 
