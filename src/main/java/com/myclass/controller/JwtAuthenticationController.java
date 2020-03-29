@@ -23,7 +23,7 @@ import com.myclass.entity.JwtResponse;
 import com.myclass.entity.UserDTO;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 public class JwtAuthenticationController {
 	
 	@Autowired
