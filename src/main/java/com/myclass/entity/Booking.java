@@ -52,13 +52,6 @@ public void setMovieId(String movieId) {
 	this.movieId = movieId;
 }
 
-public Movie getMovie() {
-	return movie;
-}
-
-public void setMovie(Movie movie) {
-	this.movie = movie;
-}
 
 public String getUserId() {
 	return userId;
@@ -80,11 +73,10 @@ public Booking() {
 	super();
 }
 
-public Booking(String id, String movieId, Movie movie, String userId, UserDTO user) {
+public Booking(String id, String movieId, String userId, UserDTO user) {
 	super();
 	this.id = id;
 	this.movieId = movieId;
-	this.movie = movie;
 	this.userId = userId;
 	this.user = user;
 }

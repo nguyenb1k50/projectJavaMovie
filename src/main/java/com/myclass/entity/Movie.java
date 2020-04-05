@@ -21,7 +21,10 @@ public class Movie {
 	private String imdbId;
 	private int imdbRating;
 	
-	//"poster": "https://m.media-amazon.com/images/M/MV5BMjIwMDIwNjAyOF5BMl5BanBnXkFtZTgwNDE1MDc2NTM@._V1_SX300.jpg",
+	@Column(name = "image", length = 1000)
+	private String image;
+	
+	@Column(name = "poster", length = 1000)
 	private String poster;
 	private String director;
     private String[] actors;
@@ -31,7 +34,8 @@ public class Movie {
 	private String description;
 	private String traller_url;
 	private String country;
-	
+	private byte[] imageData;
+ 
 	@Column(name = "catagory_id")
 	private String catagoryId;
 	
@@ -41,9 +45,36 @@ public class Movie {
 	@JsonIgnore
 	private Catagory catagory;
 	
+	
 	@OneToMany(mappedBy="movie", fetch = FetchType.LAZY)
 	private List<Calendar> calendars;
 
+	
+	
+	public byte[] getImageData() {
+		return imageData;
+	}
+
+	public void setImageData(byte[] imageData) {
+		this.imageData = imageData;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public String getPoster() {
+		return poster;
+	}
+
+	public void setPoster(String poster) {
+		this.poster = poster;
+	}
+	
 	
     public String[] getActors() {
         return actors;
@@ -126,32 +157,6 @@ public class Movie {
 	}
 
 
-
-	public Movie(String id, String imdbId, int imdbRating, String poster, String director, String[] actors,
-			String title, int duration, String language, String description, String traller_url, String country,
-			String catagoryId, Catagory catagory, List<Calendar> calendars) {
-		super();
-		this.id = id;
-		this.setImdbId(imdbId);
-		this.setImdbRating(imdbRating);
-		this.setPoster(poster);
-		this.setDirector(director);
-		this.actors = actors;
-		this.title = title;
-		this.duration = duration;
-		this.language = language;
-		this.description = description;
-		this.traller_url = traller_url;
-		this.country = country;
-		this.catagoryId = catagoryId;
-		this.catagory = catagory;
-		this.calendars = calendars;
-	}
-
-	public Movie() {
-		super();
-	}
-
 	public String getImdbId() {
 		return imdbId;
 	}
@@ -160,13 +165,6 @@ public class Movie {
 		this.imdbId = imdbId;
 	}
 
-	public String getPoster() {
-		return poster;
-	}
-
-	public void setPoster(String poster) {
-		this.poster = poster;
-	}
 
 	public String getDirector() {
 		return director;
@@ -182,6 +180,31 @@ public class Movie {
 
 	public void setImdbRating(int imdbRating) {
 		this.imdbRating = imdbRating;
+	}
+	
+	public Movie() {
+		super();
+	}
+
+	public Movie(String id, String imdbId, int imdbRating, String image, String poster, String director,
+			String[] actors, String title, int duration, String language, String description, String traller_url,
+			String country, String catagoryId, Catagory catagory) {
+		super();
+		this.id = id;
+		this.imdbId = imdbId;
+		this.imdbRating = imdbRating;
+		this.image = image;
+		this.poster = poster;
+		this.director = director;
+		this.actors = actors;
+		this.title = title;
+		this.duration = duration;
+		this.language = language;
+		this.description = description;
+		this.traller_url = traller_url;
+		this.country = country;
+		this.catagoryId = catagoryId;
+		this.catagory = catagory;
 	}
 
 
