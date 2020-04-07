@@ -11,15 +11,21 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.myclass.validate.UniqueUserNameConstraint;
 
 @Entity
-@Table(name="users")
+@Table(name="users",uniqueConstraints = @UniqueConstraint (columnNames = {"username","email"}))
 public class UserDTO {
 	@Id
 	private String id;
+	@Column(unique = true)
+	@UniqueUserNameConstraint(message = "email duplicate!")
 	private String email;
+	@Column(unique = true)
+	@UniqueUserNameConstraint(message = "username duplicate!")
 	private String username;
 	private String password;
 	private String avatar;
