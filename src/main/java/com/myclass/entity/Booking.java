@@ -6,7 +6,6 @@ import javax.persistence.ForeignKey;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -20,10 +19,9 @@ private String id;
 @Column (name = "movie_id")
 private String movieId;
 
-@OneToOne
+@ManyToOne
 @JoinColumn(name = "movie_id", foreignKey = @ForeignKey(name="fk_movie_booking"),
 insertable = false, updatable = false)
-
 @JsonIgnore
 private Movie movie;
 
@@ -35,6 +33,27 @@ private String userId;
 insertable = false, updatable = false)
 @JsonIgnore
 private UserDTO user;
+
+
+@Column (name = "seat_id")
+private String seatId;
+
+@ManyToOne
+@JoinColumn(name = "seat_id", foreignKey = @ForeignKey(name="fk_seat_booking"),
+insertable = false, updatable = false)
+
+@JsonIgnore
+private Seat seat;
+
+@Column (name = "calendar_id")
+private String calendarId;
+
+@ManyToOne
+@JoinColumn(name = "calendar_id", foreignKey = @ForeignKey(name="fk_calendar_booking"),
+insertable = false, updatable = false)
+
+@JsonIgnore
+private Calendar calendar;
 
 public String getId() {
 	return id;

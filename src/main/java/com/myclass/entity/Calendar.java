@@ -3,11 +3,15 @@ package com.myclass.entity;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -27,6 +31,9 @@ insertable = false, updatable = false)
 
 @JsonIgnore
 private Movie movie;
+
+@OneToMany(mappedBy= "calendar", fetch = FetchType.LAZY)
+private List<Booking> bookings;
 
 public String getId() {
 	return id;
