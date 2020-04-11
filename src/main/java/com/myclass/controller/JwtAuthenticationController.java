@@ -3,6 +3,7 @@ package com.myclass.controller;
 import java.util.Objects;
 
 import javax.validation.Valid;
+import javax.validation.groups.Default;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +25,7 @@ import com.myclass.config.JwtTokenUtil;
 import com.myclass.entity.JwtRequest;
 import com.myclass.entity.JwtResponse;
 import com.myclass.entity.UserDTO;
+import com.myclass.entity.UserDTO.CreateGroup;
 
 @RestController
 @CrossOrigin
@@ -51,7 +54,7 @@ public class JwtAuthenticationController {
 	}
 	
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public ResponseEntity<?> saveUser(@RequestBody @Valid UserDTO user) throws Exception {
+	public ResponseEntity<?> saveUser(@RequestBody @Validated(CreateGroup.class) UserDTO user) throws Exception {
 		return ResponseEntity.ok(userDetailsService.save(user));
 	}
 

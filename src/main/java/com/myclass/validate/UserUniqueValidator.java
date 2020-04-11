@@ -6,16 +6,18 @@ import javax.validation.ConstraintValidatorContext;
 import com.myclass.repository.UserRepository;
 
 public class UserUniqueValidator implements
-  ConstraintValidator<UniqueUserNameConstraint, String> {
+  ConstraintValidator<CustomUniqueConstraint, String> {
 	
 	private UserRepository userRepository;
+	private String fieldName;
 	 
     public UserUniqueValidator(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
     
     @Override
-    public void initialize(UniqueUserNameConstraint UniqueUserNameConstraint) {
+    public void initialize(CustomUniqueConstraint uniqueConstraint) {
+    	fieldName = uniqueConstraint.fieldName();
     }
 
 	@Override

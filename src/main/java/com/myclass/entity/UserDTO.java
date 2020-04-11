@@ -14,18 +14,20 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.myclass.validate.UniqueUserNameConstraint;
+import com.myclass.validate.CustomUniqueConstraint;
 
 @Entity
 @Table(name="users",uniqueConstraints = @UniqueConstraint (columnNames = {"username","email"}))
 public class UserDTO {
+	public interface CreateGroup {}
+	public interface UpdateGroup {}
 	@Id
 	private String id;
 	@Column(unique = true)
-	@UniqueUserNameConstraint(message = "email duplicate!")
+	@CustomUniqueConstraint(message = "email duplicate!",fieldName = "email",groups = CreateGroup.class)
 	private String email;
 	@Column(unique = true)
-	@UniqueUserNameConstraint(message = "username duplicate!")
+	@CustomUniqueConstraint(message = "username duplicate!", fieldName ="username",groups = CreateGroup.class)
 	private String username;
 	private String password;
 	private String avatar;
