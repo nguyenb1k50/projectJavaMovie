@@ -1,6 +1,7 @@
 package com.myclass.controller;
 
 import com.myclass.service.StripeClient;
+import com.myclass.validate.Authorized;
 import com.stripe.model.Charge;
 import com.stripe.model.Customer;
 
@@ -23,6 +24,7 @@ public class PaymentController {
 	}
 
 	@PostMapping("/charge")
+	@Authorized(role ="user")
 	public Object chargeCard(HttpServletRequest request) throws Exception {
 		String token = request.getHeader("token");
 		Double amount = Double.parseDouble(request.getHeader("amount"));
