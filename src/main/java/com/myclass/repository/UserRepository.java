@@ -24,4 +24,7 @@ public interface UserRepository extends JpaRepository<UserDTO, String> {
 	
 	@Query("SELECT new com.myclass.dto.UserDto(u.id, u.email, u.username, r.description) FROM UserDTO u JOIN u.role r")
 	List<UserDto> getAllDTO();
+	
+	@Query("SELECT u FROM UserDTO u WHERE u.id = :id AND u.activeToken = :token")
+	UserDTO searchUserWithToken(@Param("id")  String userId, @Param("token") String activeToken);
 }

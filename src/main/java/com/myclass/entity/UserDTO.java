@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.myclass.validate.CustomUniqueConstraint;
@@ -24,9 +25,11 @@ public class UserDTO {
 	@Id
 	private String id;
 	@Column(unique = true)
+	@NotEmpty(groups = CreateGroup.class)
 	@CustomUniqueConstraint(message = "email duplicate!",fieldName = "email",groups = CreateGroup.class)
 	private String email;
 	@Column(unique = true)
+	@NotEmpty(groups = CreateGroup.class)
 	@CustomUniqueConstraint(message = "username duplicate!", fieldName ="username",groups = CreateGroup.class)
 	private String username;
 	private String password;
@@ -35,7 +38,8 @@ public class UserDTO {
 	private String address;
 	private String website;
 	private String facebook;
-	
+	private Boolean active;
+	private String activeToken;
 	@Column(name="role_id")
 	private String roleId;
 	
@@ -71,6 +75,7 @@ public class UserDTO {
 		this.website = website;
 		this.facebook = facebook;
 		this.roleId = roleId;
+		this.active = false;
 	}
 
 	public String getId() {
@@ -151,5 +156,21 @@ public class UserDTO {
 
 	public void setRoleId(String roleId) {
 		this.roleId = roleId;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	public String getActiveToken() {
+		return activeToken;
+	}
+
+	public void setActiveToken(String activeToken) {
+		this.activeToken = activeToken;
 	}
 }
