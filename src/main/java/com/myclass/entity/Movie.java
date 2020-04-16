@@ -1,4 +1,5 @@
 package com.myclass.entity;
+import java.sql.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -10,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -31,7 +33,34 @@ public class Movie {
 	private String description;
 	private String traller_url;
 	private String country;
-	
+	private Date openDate;
+	public Date getOpenDate() {
+		return openDate;
+	}
+
+	public void setOpenDate(Date openDate) {
+		this.openDate = openDate;
+	}
+
+	public Date getCloseDate() {
+		return closeDate;
+	}
+
+	public void setCloseDate(Date closeDate) {
+		this.closeDate = closeDate;
+	}
+
+	private Date closeDate;
+	@Transient
+	private float star;
+	public float getStar() {
+		return star;
+	}
+
+	public void setStar(float star) {
+		this.star = star;
+	}
+
 	@Column(name = "catagory_id")
 	private String catagoryId;
 	
@@ -44,6 +73,8 @@ public class Movie {
 	@OneToMany(mappedBy="movie", fetch = FetchType.LAZY)
 	private List<Calendar> calendars;
 
+//	@OneToMany(mappedBy="movie", fetch = FetchType.LAZY)
+//	private List<Ratting> ratting;
 	
     public String[] getActors() {
         return actors;

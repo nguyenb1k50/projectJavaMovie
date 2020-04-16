@@ -14,5 +14,13 @@ public interface MovieRepository extends JpaRepository<Movie, String>{
 	boolean existsById(String id);
 	@Query("SELECT e FROM Movie e ORDER BY e.title DESC")
 	List<Movie> getAllMovie();
+	
+	@Query("SELECT e FROM Movie e WHERE e.openDate > CURDATE() ORDER BY e.title DESC")
+	List<Movie> getComingMovie();
 
+	@Query("SELECT e FROM Movie e WHERE e.openDate < CURDATE() AND e.closeDate > CURDATE() ORDER BY e.title DESC")
+	List<Movie> getShowingMovie();
+	
+	@Query("SELECT e FROM Movie e WHERE e.closeDate < CURDATE() ORDER BY e.title DESC")
+	List<Movie> getExpireMovie();
 }
