@@ -6,12 +6,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,9 +30,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.myclass.config.StaticCons;
 import com.myclass.entity.Movie;
+import com.myclass.entity.Ratting;
 import com.myclass.repository.MovieRepository;
+import com.myclass.repository.RattingRepository;
 
 @RestController
 @RequestMapping("api/movie")
@@ -37,10 +47,41 @@ public class MovieController {
 	@Autowired
 	MovieRepository movieRepository;
 
+	@Autowired
+	RattingRepository rattingRepo;
+
 	@GetMapping("")
-	public Object get() {
-		List<Movie> movies = movieRepository.getAllMovie();
+	public Object get(@RequestParam(required = false, defaultValue = "") String showtime) {
+		List<Movie> movies;
+		switch (showtime) {
+		case "comingup":
+			movies = formatM(movieRepository.getComingMovie());
+			break;
+		case "showing":
+			movies = formatM(movieRepository.getShowingMovie());
+			break;
+		case "close":
+			movies = formatM(movieRepository.getExpireMovie());
+			break;
+		default:
+			movies = formatM(movieRepository.getAllMovie());
+			break;
+		}
+
 		return new ResponseEntity<List<Movie>>(movies, HttpStatus.OK);
+	}
+
+	@GetMapping("/{id}")
+	public Object getDetail(@PathVariable String id) {
+
+		Optional<Movie> movieOp = movieRepository.findById(id);
+		if (movieOp.isPresent()) {
+			Movie movie = movieOp.get();
+			movie.setPoster(StaticCons.currentUrl() + movie.getPoster());
+			movie.setStar(rattingRepo.getMovieStar(id));
+			return new ResponseEntity<Movie>(movie, HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("Id không tồn tại!", HttpStatus.BAD_REQUEST);
 	}
 
 	@PostMapping()
@@ -53,14 +94,15 @@ public class MovieController {
 				// File.separator for difference OS platforms
 				Path path = Paths.get(System.getProperty("user.dir") + File.separator + UPLOAD_DIR + File.separator
 						+ posterImg.getOriginalFilename());
-				if(Files.write(path, bytes) != null) {
-					movie.setPoster("upload/"+posterImg.getOriginalFilename());
+				if (Files.write(path, bytes) != null) {
+					movie.setPoster("upload/" + posterImg.getOriginalFilename());
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			movie.setId(UUID.randomUUID().toString());
 			Movie entity = movieRepository.save(movie);
+			entity.setPoster(StaticCons.currentUrl() + entity.getPoster());
 			return new ResponseEntity<Movie>(entity, HttpStatus.CREATED);
 		} else {
 			return new ResponseEntity<String>("Movie's Title exist", HttpStatus.BAD_REQUEST);
@@ -88,4 +130,40 @@ public class MovieController {
 		return new ResponseEntity<String>("Id không tồn tại!", HttpStatus.BAD_REQUEST);
 	}
 
+	@PostMapping("/rate")
+	public Object rateMovie(@RequestBody Map<String, String> allParams) {
+		String movieId = allParams.get("movieId");
+		String userId = allParams.get("userId");
+		int star = Integer.parseInt(allParams.get("star"));
+		if (StringUtils.isEmpty(movieId) || StringUtils.isEmpty(userId)) {
+			return new ResponseEntity<String>("thieu param", HttpStatus.BAD_REQUEST);
+		}
+		Ratting rate = new Ratting();
+		try {
+			rate = rattingRepo.checkExistsRate(userId, movieId);
+		} catch (InvalidDataAccessApiUsageException e) {
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+
+		if (rate != null) {
+			return new ResponseEntity<String>("user da rate phim nay roi", HttpStatus.BAD_REQUEST);
+		}
+		try {
+			rate = rattingRepo.save(new Ratting(movieId, userId, star));
+		} catch (DataIntegrityViolationException e) {
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<Object>(rate, HttpStatus.BAD_REQUEST);
+	}
+
+	public List<Movie> formatM(List<Movie> movies) {
+		for (Movie m : movies) {
+			if (m.getPoster() != null) {
+				m.setPoster(StaticCons.currentUrl() + m.getPoster());
+				m.setStar(rattingRepo.getMovieStar(m.getId()));
+			}
+		}
+
+		return movies;
+	}
 }
