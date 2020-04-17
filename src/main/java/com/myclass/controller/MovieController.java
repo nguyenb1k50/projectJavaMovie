@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -78,6 +79,7 @@ public class MovieController {
 		if (movieOp.isPresent()) {
 			Movie movie = movieOp.get();
 			movie.setPoster(StaticCons.currentUrl() + movie.getPoster());
+			movie.setImage(StaticCons.currentUrl() + movie.getImage());
 			movie.setStar(rattingRepo.getMovieStar(id));
 			return new ResponseEntity<Movie>(movie, HttpStatus.OK);
 		}
@@ -85,24 +87,16 @@ public class MovieController {
 	}
 
 	@PostMapping()
-	public Object post(@RequestParam("posterImg") MultipartFile posterImg, @ModelAttribute Movie movie) {
+	public Object post(@RequestParam("posterImg") MultipartFile posterImg,@RequestParam("image") MultipartFile image
+			,@ModelAttribute Movie movie) {
 		Boolean p = movieRepository.existsByTitle(movie.getTitle());
 		if (!p) {
-			try {
-				// Get the file and save it somewhere
-				byte[] bytes = posterImg.getBytes();
-				// File.separator for difference OS platforms
-				Path path = Paths.get(System.getProperty("user.dir") + File.separator + UPLOAD_DIR + File.separator
-						+ posterImg.getOriginalFilename());
-				if (Files.write(path, bytes) != null) {
-					movie.setPoster("upload/" + posterImg.getOriginalFilename());
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			movie.setPoster(StaticCons.saveImage(posterImg));
+			movie.setImage(StaticCons.saveImage(image));
 			movie.setId(UUID.randomUUID().toString());
 			Movie entity = movieRepository.save(movie);
 			entity.setPoster(StaticCons.currentUrl() + entity.getPoster());
+			entity.setImage(StaticCons.currentUrl() + entity.getImage());
 			return new ResponseEntity<Movie>(entity, HttpStatus.CREATED);
 		} else {
 			return new ResponseEntity<String>("Movie's Title exist", HttpStatus.BAD_REQUEST);
@@ -110,10 +104,13 @@ public class MovieController {
 	}
 
 	@PutMapping("/{id}")
-	public Object post(@PathVariable String id, @RequestBody Movie movie) {
+	public Object post(@PathVariable String id, @ModelAttribute Movie movie,
+			@RequestParam("posterImg") MultipartFile posterImg, @RequestParam("imageFile") MultipartFile image) {
 
 		if (movieRepository.existsById(id)) {
 			movie.setId(id);
+			movie.setPoster(StaticCons.saveImage(posterImg));
+			movie.setImage(StaticCons.saveImage(image));
 			Movie entity = movieRepository.save(movie);
 			return new ResponseEntity<Movie>(entity, HttpStatus.OK);
 		}
@@ -160,6 +157,7 @@ public class MovieController {
 		for (Movie m : movies) {
 			if (m.getPoster() != null) {
 				m.setPoster(StaticCons.currentUrl() + m.getPoster());
+				m.setImage(StaticCons.currentUrl() + m.getImage());
 				m.setStar(rattingRepo.getMovieStar(m.getId()));
 			}
 		}
