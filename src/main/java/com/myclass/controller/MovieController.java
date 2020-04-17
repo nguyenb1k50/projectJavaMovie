@@ -87,7 +87,7 @@ public class MovieController {
 	}
 
 	@PostMapping()
-	public Object post(@RequestParam("posterImg") MultipartFile posterImg,@RequestParam("image") MultipartFile image
+	public Object post(@RequestParam("posterImg") MultipartFile posterImg,@RequestParam("imageFile") MultipartFile image
 			,@ModelAttribute Movie movie) {
 		Boolean p = movieRepository.existsByTitle(movie.getTitle());
 		if (!p) {
