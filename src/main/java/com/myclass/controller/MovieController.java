@@ -105,13 +105,17 @@ public class MovieController {
 
 	@PutMapping("/{id}")
 	public Object post(@PathVariable String id, @ModelAttribute Movie movie,
-			@RequestParam("posterImg") MultipartFile posterImg, @RequestParam("imageFile") MultipartFile image) {
+			@RequestParam(name = "posterImg",required = false) MultipartFile posterImg, 
+			@RequestParam(name = "imageFile",required = false) MultipartFile image) {
 
 		if (movieRepository.existsById(id)) {
-			movie.setId(id);
-			movie.setPoster(StaticCons.saveImage(posterImg));
-			movie.setImage(StaticCons.saveImage(image));
-			Movie entity = movieRepository.save(movie);
+			Movie m = movieRepository.findById(id).get();
+			StaticCons.copyNonNullProperties(movie, m);
+			if(posterImg != null && posterImg.getSize() > 0)
+				m.setPoster(StaticCons.saveImage(posterImg));
+			if(image != null && image.getSize() > 0)
+				m.setImage(StaticCons.saveImage(image));
+			Movie entity = movieRepository.save(m);
 			return new ResponseEntity<Movie>(entity, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("Id không tồn tại!", HttpStatus.BAD_REQUEST);
