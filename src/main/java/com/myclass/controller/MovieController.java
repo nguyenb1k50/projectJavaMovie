@@ -39,6 +39,7 @@ import com.myclass.entity.Ratting;
 import com.myclass.repository.MovieRepository;
 import com.myclass.repository.RattingRepository;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("api/movie")
 public class MovieController {
