@@ -111,6 +111,7 @@ public class MovieController {
 
 		if (movieRepository.existsById(id)) {
 			Movie m = movieRepository.findById(id).get();
+			//for update partial property
 			StaticCons.copyNonNullProperties(movie, m);
 			if(posterImg != null && posterImg.getSize() > 0)
 				m.setPoster(StaticCons.saveImage(posterImg));
