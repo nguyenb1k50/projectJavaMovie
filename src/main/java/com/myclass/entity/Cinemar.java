@@ -20,13 +20,13 @@ public class Cinemar {
 	private String title;
 	
 	@Column(name="lat")
-	private float lat;
+	private double lat;
 	
 	@Column(name="lng")
-	private float lng;
+	private double lng;
 	
-	@OneToMany(mappedBy="cinemar", fetch = FetchType.LAZY)
-	private List<Seat> seats;
+//	@OneToMany(mappedBy="cinemar", fetch = FetchType.LAZY)
+//	private List<Seat> seats;
 
 	public String getId() {
 		return id;
@@ -48,7 +48,7 @@ public class Cinemar {
 		super();
 	}
 
-	public float getLat() {
+	public double getLat() {
 		return lat;
 	}
 
@@ -56,7 +56,7 @@ public class Cinemar {
 		this.lat = lat;
 	}
 
-	public float getLng() {
+	public double getLng() {
 		return lng;
 	}
 
@@ -64,13 +64,13 @@ public class Cinemar {
 		this.lng = lng;
 	}
 
-	public List<Seat> getSeats() {
-		return seats;
-	}
-
-	public void setSeats(List<Seat> seats) {
-		this.seats = seats;
-	}
+//	public List<Seat> getSeats() {
+//		return seats;
+//	}
+//
+//	public void setSeats(List<Seat> seats) {
+//		this.seats = seats;
+//	}
 
 	
 	
