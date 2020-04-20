@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +25,7 @@ import com.myclass.entity.Catagory;
 import com.myclass.entity.Cinemar;
 import com.myclass.repository.CalendarRepository;
 import com.myclass.repository.CinemaRepository;
-
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("api/cinema")
 public class CinemaController {
