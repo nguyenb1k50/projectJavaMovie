@@ -4,6 +4,7 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +21,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.myclass.config.StaticCons;
 import com.myclass.entity.Calendar;
 import com.myclass.entity.Catagory;
 import com.myclass.entity.Cinemar;
+import com.myclass.entity.Movie;
 import com.myclass.repository.CalendarRepository;
 import com.myclass.repository.CinemaRepository;
 @CrossOrigin(origins = "*")
@@ -44,6 +47,16 @@ public class CinemaController {
 		}
 		
 		return new ResponseEntity<List<Cinemar>>(c, HttpStatus.OK);
+	}
+	
+	@GetMapping("/{id}")
+	public Object getDetail(@PathVariable String id) {
+
+		Optional<Cinemar> c = cinemaRepository.findById(id);
+		if (c.isPresent()) {
+			return new ResponseEntity<Cinemar>(c.get(), HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("Id không tồn tại!", HttpStatus.BAD_REQUEST);
 	}
 	
 	@PostMapping()

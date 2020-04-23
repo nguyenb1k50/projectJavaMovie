@@ -14,8 +14,12 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 
+import org.springframework.lang.Nullable;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.myclass.validate.CustomUniqueConstraint;
+
+import net.bytebuddy.implementation.bind.annotation.Empty;
 
 @Entity
 @Table(name="users",uniqueConstraints = @UniqueConstraint (columnNames = {"username","email"}))
@@ -40,6 +44,25 @@ public class UserDTO {
 	private String facebook;
 	private Boolean active;
 	private String activeToken;
+	@Column(nullable = true)
+	private Integer visaCard;
+	private String stripeCusId;
+	public int getVisaCard() {
+		return visaCard;
+	}
+
+	public void setVisaCard(int visaCard) {
+		this.visaCard = visaCard;
+	}
+
+	public String getStripeCusId() {
+		return stripeCusId;
+	}
+
+	public void setStripeCusId(String stripeCusId) {
+		this.stripeCusId = stripeCusId;
+	}
+
 	@Column(name="role_id")
 	private String roleId;
 	

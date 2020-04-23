@@ -13,100 +13,67 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name = "bookings")
 public class Booking {
-@Id
-private String id;
+	@Id
+	private String id;
 
-@Column (name = "movie_id")
-private String movieId;
+	@Column(name = "user_id")
+	private String userId;
 
-@ManyToOne
-@JoinColumn(name = "movie_id", foreignKey = @ForeignKey(name="fk_movie_booking"),
-insertable = false, updatable = false)
-@JsonIgnore
-private Movie movie;
+	@ManyToOne
+	@JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_booking_user"), insertable = false, updatable = false)
+	@JsonIgnore
+	private UserDTO user;
 
-@Column(name = "user_id")
-private String userId;
+	@Column(name = "calendar_id")
+	private String calendarId;
 
-@ManyToOne
-@JoinColumn(name = "user_id", foreignKey = @ForeignKey(name="fk_booking_user"),
-insertable = false, updatable = false)
-@JsonIgnore
-private UserDTO user;
+	@ManyToOne
+	@JoinColumn(name = "calendar_id", foreignKey = @ForeignKey(name = "fk_calendar_booking"), insertable = false, updatable = false)
+	@JsonIgnore
+	private Calendar calendar;
 
+	public String getId() {
+		return id;
+	}
 
-@Column (name = "seat_id")
-private String seatId;
+	public void setId(String id) {
+		this.id = id;
+	}
 
-@ManyToOne
-@JoinColumn(name = "seat_id", foreignKey = @ForeignKey(name="fk_seat_booking"),
-insertable = false, updatable = false)
+	public String getUserId() {
+		return userId;
+	}
 
-@JsonIgnore
-private Seat seat;
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 
-@Column (name = "calendar_id")
-private String calendarId;
+	public UserDTO getUser() {
+		return user;
+	}
 
-@ManyToOne
-@JoinColumn(name = "calendar_id", foreignKey = @ForeignKey(name="fk_calendar_booking"),
-insertable = false, updatable = false)
+	public void setUser(UserDTO user) {
+		this.user = user;
+	}
 
-@JsonIgnore
-private Calendar calendar;
+	public Booking() {
+		super();
+	}
 
-public String getId() {
-	return id;
-}
+	public String getCalendarId() {
+		return calendarId;
+	}
 
-public void setId(String id) {
-	this.id = id;
-}
+	public void setCalendarId(String calendarId) {
+		this.calendarId = calendarId;
+	}
 
-public String getMovieId() {
-	return movieId;
-}
-
-public void setMovieId(String movieId) {
-	this.movieId = movieId;
-}
-
-public Movie getMovie() {
-	return movie;
-}
-
-public void setMovie(Movie movie) {
-	this.movie = movie;
-}
-
-public String getUserId() {
-	return userId;
-}
-
-public void setUserId(String userId) {
-	this.userId = userId;
-}
-
-public UserDTO getUser() {
-	return user;
-}
-
-public void setUser(UserDTO user) {
-	this.user = user;
-}
-
-public Booking() {
-	super();
-}
-
-public Booking(String id, String movieId, Movie movie, String userId, UserDTO user) {
-	super();
-	this.id = id;
-	this.movieId = movieId;
-	this.movie = movie;
-	this.userId = userId;
-	this.user = user;
-}
-
+	public Booking(String userId, UserDTO user, String calendarId, Calendar calendar) {
+		super();
+		this.userId = userId;
+		this.user = user;
+		this.calendarId = calendarId;
+		this.calendar = calendar;
+	}
 
 }
