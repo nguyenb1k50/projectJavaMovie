@@ -22,28 +22,21 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Seat {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
 	@NotNull
 	private String id;
 	
-	@Column(name="seat_name")
-	private String name;
+	@Column(name="seat_code")
+	private String seatCode;
 	
-	@Column(name="seat_status")
-	private String status;
-	
-	@Column(name = "cinemar_id")
-	private String cinemarId;
+	@Column(name="booking_id")
+	private String bookingId;
 	
 	@ManyToOne
-	@JoinColumn(name = "cinemar_id", foreignKey = @ForeignKey(name="fk_seat_cinemar"),
+	@JoinColumn(name = "booking_id", foreignKey = @ForeignKey(name="fk_seat_booking"),
 	insertable = false, updatable = false)
 	@JsonIgnore
-	private Cinemar cinemar;
-
-	@OneToMany(mappedBy="seat", fetch = FetchType.LAZY)
-	private List<Booking> bookings;
+	private Booking booking;
 	
 	public String getId() {
 		return id;
@@ -53,36 +46,24 @@ public class Seat {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-
 	public Seat() {
 		super();
 	}
 
-	public Seat(@NotNull String id, String name, String status, Seat seat) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.status = status;
+	public String getSeatCode() {
+		return seatCode;
 	}
-	
-	
-	
-	
+
+	public void setSeatCode(String seatCode) {
+		this.seatCode = seatCode;
+	}
+
+	public String getBookingId() {
+		return bookingId;
+	}
+
+	public void setBookingCode(String bookingCode) {
+		this.bookingId = bookingCode;
+	}
 
 }
