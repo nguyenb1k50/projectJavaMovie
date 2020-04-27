@@ -44,14 +44,13 @@ public class UserDTO {
 	private String facebook;
 	private Boolean active;
 	private String activeToken;
-	@Column(nullable = true)
 	private Integer visaCard;
 	private String stripeCusId;
-	public int getVisaCard() {
+	public Integer getVisaCard() {
 		return visaCard;
 	}
 
-	public void setVisaCard(int visaCard) {
+	public void setVisaCard(Integer visaCard) {
 		this.visaCard = visaCard;
 	}
 

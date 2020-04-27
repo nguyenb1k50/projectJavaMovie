@@ -54,7 +54,8 @@ public class JwtUserDetailsService implements UserDetailsService {
 		newUser.setActive(false);
 		String randomToken = UUID.randomUUID().toString();
 		newUser.setActiveToken(randomToken);
-		mail.sendSimpleMessage(user.getEmail(), "Activate account", generateActiveToken(newUser.getId(), randomToken));
+//		mail.sendSimpleMessage(user.getEmail(), "Activate account", generateActiveToken(newUser.getId(), randomToken));
+		mail.sendActiveMailTemplate(user.getEmail(),"Activate account", generateActiveToken(newUser.getId(), randomToken), user.getUsername());
 		return userRepository.save(newUser);
 	}
 

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+</head>
+<body>
+	<table style="width: 538px; background-color: #393836" align="center"
+		cellspacing="0" cellpadding="0">
+		<tbody>
+			<tr>
+				<td
+					style="height: 65px; background-color: #171a21; border-bottom: 1px solid #4d4b48; padding: 0px">
+					<img src="http://localhost:8080/logo/logo.png" width="538"
+					height="65" alt="Steam" class="CToWUd">
+				</td>
+			</tr>
+			<tr>
+				<td bgcolor="#17212e">
+
+					<table width="470" border="0" align="center" cellpadding="0"
+						cellspacing="0"
+						style="padding-left: 5px; padding-right: 5px; padding-bottom: 10px">
+
+						<tbody>
+							<tr bgcolor="#17212e">
+								<td style="padding-top: 32px; padding-bottom: 16px"><span
+									style="font-size: 24px; color: #66c0f4; font-family: Arial, Helvetica, sans-serif; font-weight: bold">
+										Hello <span th:text="${username}"></span>,
+								</span><br></td>
+							</tr>
+
+							<tr bgcolor="#121a25">
+								<td
+									style="padding: 20px; font-size: 12px; line-height: 17px; color: #c6d4df; font-family: Arial, Helvetica, sans-serif">
+									<p>In order to help maintain the security of your account,
+										please verify your email address.</p>
+									<p>
+										<a style="color: #c6d4df" th:href="${url}" target="_blank"
+											data-saferedirecturl="https://www.google.com/">Click here
+											to verify your email address.</a>
+									</p>
+								</td>
+							</tr>
+
+							<tr>
+								<td
+									style="padding-top: 16px; font-size: 12px; line-height: 17px; color: #6d7880; font-family: Arial, Helvetica, sans-serif">
+									<p>Verifying your email address will enable you to: take
+										advantage of System Guard security, change your account
+										credentials, and to
+										recover access to your account should you lose access or
+										forget your password.</p>
+								</td>
+							</tr>
+
+							<tr>
+								<td
+									style="font-size: 12px; color: #6d7880; padding-top: 16px; padding-bottom: 60px">
+									<p>
+										Thanks for helping us maintain the security of your account.
+										The Steam Team <a style="color: #8f98a0"
+											href="https://help.steampowered.com" target="_blank"
+											data-saferedirecturl="https://www.google.com/url?q=https://help.steampowered.com&amp;source=gmail&amp;ust=1588085716319000&amp;usg=AFQjCNGWuHD1PpHuBfaoO_an596uabFNWQ">https://help.steampowered.com</a><br>
+									</p>
+								</td>
+							</tr>
+
+						</tbody>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td bgcolor="#000000">
+
+					<table width="460" height="55" border="0" align="center"
+						cellpadding="0" cellspacing="0">
+
+						<tbody>
+							<tr valign="top">
+								<td width="110"><a href="http://www.valvesoftware.com/"
+									target="_blank"
+									data-saferedirecturl="https://www.google.com/url?q=http://www.valvesoftware.com/&amp;source=gmail&amp;ust=1588085716319000&amp;usg=AFQjCNHO4Vyvw26LKV9kJhxYpTpCeBX_gw">
+										<img
+										src="https://ci5.googleusercontent.com/proxy/xwQ0uBJ5Fi71g1BlTPnu03rkO2-VOtfL-IjI4thillAXC-sUPz6itI37varNpJf4fdbxVVluxkmoE_doSBVZ-CuZfySuIsaRqYw=s0-d-e1-ft#http://storefront.steampowered.com/v/img/gift/VALVe.gif"
+										alt="VALVE" width="92" height="26" hspace="0" vspace="0"
+										border="0" align="top" class="CToWUd">
+								</a></td>
+								<td width="350" valign="top"><span
+									style="color: #999999; font-size: 9px; font-family: Verdana, Arial, Helvetica, sans-serif">©
+										Valve Corporation. All rights reserved. All trademarks are
+										property of their respective owners in the US and other
+										countries.</span></td>
+							</tr>
+
+						</tbody>
+					</table>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+</body>
+</html>
