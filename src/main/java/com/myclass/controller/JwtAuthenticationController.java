@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.myclass.service.JwtUserDetailsService;
 
 import io.jsonwebtoken.Claims;
@@ -78,7 +80,7 @@ public class JwtAuthenticationController {
 	}
 	
 	@RequestMapping(value = "/active/{activeToken}", method = RequestMethod.GET)
-	public ResponseEntity<?> saveUser(@PathVariable String activeToken) throws Exception {		
+	public Object saveUser(@PathVariable String activeToken) throws Exception {		
 		Claims claim = jwtTokenUtil.getAllInfo(activeToken);
 		String userId = claim.get("userId").toString();
 		String token = claim.getSubject();
@@ -87,9 +89,11 @@ public class JwtAuthenticationController {
 			user.setActive(true);
 			user.setActiveToken("");
 			userRepository.save(user);
-			return new ResponseEntity<>("Your account has been actived!",HttpStatus.OK);
+			return new ModelAndView("/VerifyEmailSuccess");
+			//return new ResponseEntity<>("Your account has been actived!",HttpStatus.OK);
 		}
 		else
-			return new ResponseEntity<>("Invalid request!",HttpStatus.BAD_REQUEST);
+			return new ModelAndView("/VerifyEmailSuccess");
+			//return new ResponseEntity<>("Invalid request!",HttpStatus.BAD_REQUEST);
 	}
 }
