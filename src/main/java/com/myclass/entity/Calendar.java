@@ -14,6 +14,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.hibernate.annotations.Formula;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -30,6 +33,12 @@ public class Calendar {
 	@JoinColumn(name = "movie_id", foreignKey = @ForeignKey(name = "fk_movie_calendar"), insertable = false, updatable = false)
 	@JsonIgnore
 	private Movie movie;
+	@Transient
+	private String movieName;
+	@Transient
+	private String cinemaName;
+	@Transient
+	private int movieDuration;
 	public String getMovieId() {
 		return movieId;
 	}
@@ -107,6 +116,38 @@ public class Calendar {
 		this.openDate = openDate;
 		this.time = time;
 		this.movie = movie;
+	}
+
+	public String getMovieName() {
+		return movieName;
+	}
+
+	public void setMovieName(String movieName) {
+		this.movieName = movieName;
+	}
+	
+	public void setMovieName(Object a) {
+		this.movieName = null;
+	}
+
+	public String getCinemaName() {
+		return cinemaName;
+	}
+
+	public void setCinemaName(String cinemaName) {
+		this.cinemaName = cinemaName;
+	}
+	
+	public void setCinemaName(Object o) {
+		this.cinemaName = null;
+	}
+
+	public int getMovieDuration() {
+		return movieDuration;
+	}
+
+	public void setMovieDuration(int movieDuration) {
+		this.movieDuration = movieDuration;
 	}
 
 }

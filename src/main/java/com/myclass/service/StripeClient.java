@@ -50,6 +50,7 @@ public class StripeClient {
     }
 
     public Charge chargeCustomerCard(String customerId, double amount) throws Exception {
+    	Stripe.apiKey = stripeSecretKey;
         String sourceCard = getCustomer(customerId).getDefaultSource();
         Map<String, Object> chargeParams = new HashMap<String, Object>();
         chargeParams.put("amount", (int)(amount * 100));
