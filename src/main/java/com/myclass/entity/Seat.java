@@ -1,5 +1,6 @@
 package com.myclass.entity;
 
+import java.sql.Time;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -38,6 +39,16 @@ public class Seat {
 	@JsonIgnore
 	private Booking booking;
 	
+	private Time showTime;
+	
+	public Time getShowTime() {
+		return showTime;
+	}
+
+	public void setShowTime(Time showTime) {
+		this.showTime = showTime;
+	}
+
 	public String getId() {
 		return id;
 	}
