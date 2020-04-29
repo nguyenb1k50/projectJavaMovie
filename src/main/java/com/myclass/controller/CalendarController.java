@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myclass.entity.Calendar;
+import com.myclass.entity.Cinemar;
+import com.myclass.entity.Movie;
 import com.myclass.repository.CalendarRepository;
 
 @RestController
@@ -31,6 +33,17 @@ public class CalendarController {
 	@GetMapping("")
 	public Object get() {
 		List<Calendar> calenders = calendarRepository.getAllCalendar();
+		for(Calendar c : calenders)
+		{
+			Movie m = c.getMovie();
+			Cinemar cine = c.getCinemar();
+			String mName = m.getTitle();
+			String cName = cine.getTitle();
+			c.setMovieName(mName);
+			c.setCinemaName(cName);
+			c.setMovieDuration(m.getDuration());
+			
+		}
 		return new ResponseEntity<List<Calendar>>(calenders, HttpStatus.OK);
 	}
 	

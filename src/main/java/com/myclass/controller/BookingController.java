@@ -1,5 +1,6 @@
 package com.myclass.controller;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -49,18 +50,19 @@ public class BookingController {
 	}
 
 	@GetMapping("/seats/{calendarId}")
-	public Object get(@PathVariable String calendarId) {
-		List<String> b = seatRepository.getAlreadyBookingSeat(calendarId);
+	public Object get(@PathVariable String calendarId, @RequestParam Time showTime) {
+		List<String> b = seatRepository.getAlreadyBookingSeat(calendarId,showTime);
 		return new ResponseEntity<List<String>>(b, HttpStatus.OK);
 	}
 
 	@PostMapping()
 	public synchronized Object post(@RequestBody Map<String, Object> body) {
 		ArrayList<String> seatCodes = (ArrayList<String>)(body.get("seatCodes"));
+		Time showTime = Time.valueOf( body.get("showTime").toString());
 		Booking booking = new Booking();
 		booking.setUserId(body.get("userId").toString());
 		booking.setCalendarId(body.get("calendarId").toString());
-		if(!checkSeats(seatCodes,booking.getCalendarId())){
+		if(!checkSeats(seatCodes,booking.getCalendarId(),showTime)){
 			return new ResponseEntity<String>("seat incorrect!", HttpStatus.BAD_REQUEST);
 		}
 		//payment
@@ -85,15 +87,16 @@ public class BookingController {
 			s.setId(UUID.randomUUID().toString());
 			s.setBookingCode(booking.getId());
 			s.setSeatCode(iter.next().toString());
+			s.setShowTime(showTime);
 			seatRepository.save(s);
 		}
 		return new ResponseEntity<Booking>(b, HttpStatus.CREATED);
 
 	}
 
-	public boolean checkSeats(ArrayList<String> seatCodes, String calendarId) {
+	public boolean checkSeats(ArrayList<String> seatCodes, String calendarId, Time showTime) {
 		Iterator<String> seat = seatCodes.iterator();
-		ArrayList<String> bookedSeats = seatRepository.getAlreadyBookingSeat(calendarId);
+		ArrayList<String> bookedSeats = seatRepository.getAlreadyBookingSeat(calendarId,showTime);
 		while (seat.hasNext()) {
 			String c = seat.next();
 			boolean a = StaticCons.seatCode.contains(c);
