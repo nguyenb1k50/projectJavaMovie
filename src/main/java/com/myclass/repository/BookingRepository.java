@@ -29,6 +29,7 @@ public interface BookingRepository extends JpaRepository<Booking, String>{
 			+ "and cal.cinemar_id = c.id "
 			+ "and cal.movie_id = m.id "
 			+ "and b.user_id = u.id "
-			+ "and b.id = :bookingId" , nativeQuery = true)
+			+ "and b.id = :bookingId "
+			+ "group by s.show_time" , nativeQuery = true)
 	List<String[]> getBookingDetail(@Param("bookingId") String bookingId);
 }
