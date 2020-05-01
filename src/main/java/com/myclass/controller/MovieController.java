@@ -193,7 +193,7 @@ public class MovieController {
 		} catch (DataIntegrityViolationException e) {
 			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<Object>(rate, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Object>(rate, HttpStatus.OK);
 	}
 
 	public List<Movie> formatM(List<Movie> movies) {

@@ -33,13 +33,13 @@ public class Comment {
 		private Date commentDate;
 		
 		@ManyToOne
-		@JoinColumn(name = "movie_id", foreignKey = @ForeignKey(name="fk_movie_ratting"),
+		@JoinColumn(name = "movie_id", foreignKey = @ForeignKey(name="fk_movie_cmt"),
 		insertable = false, updatable = false)
 		@JsonIgnore
 		private Movie movie;
 		
 		@ManyToOne
-		@JoinColumn(name = "user_id", foreignKey = @ForeignKey(name="fk_user_ratting"),
+		@JoinColumn(name = "user_id", foreignKey = @ForeignKey(name="fk_user_cmt"),
 		insertable = false, updatable = false)
 		@JsonIgnore
 		private UserDTO user;
