@@ -13,6 +13,10 @@ import javax.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -28,9 +32,12 @@ import com.myclass.config.StaticCons;
 import com.myclass.entity.Booking;
 import com.myclass.entity.Catagory;
 import com.myclass.entity.Seat;
+import com.myclass.entity.UserDTO;
 import com.myclass.repository.BookingRepository;
 import com.myclass.repository.CatagoryRepository;
 import com.myclass.repository.SeatRepository;
+import com.myclass.repository.UserRepository;
+import com.myclass.service.MailService;
 
 @RestController
 @RequestMapping("api/booking")
@@ -42,7 +49,10 @@ public class BookingController {
 	SeatRepository seatRepository;
 	@Autowired
 	PaymentController pay;
-
+	@Autowired
+	private MailService mail;
+	@Autowired
+	UserRepository userRepository;
 	@GetMapping("")
 	public Object get() {
 		List<Booking> b = bookingRepository.getAllBooking();
@@ -57,10 +67,18 @@ public class BookingController {
 
 	@PostMapping()
 	public synchronized Object post(@RequestBody Map<String, Object> body) {
+		String currentUserName;
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			currentUserName = authentication.getName();
+		} else {
+			throw new AccessDeniedException("đăng nhâp đi bạn!");
+		}
+		UserDTO u = userRepository.findByUsername(currentUserName);
 		ArrayList<String> seatCodes = (ArrayList<String>)(body.get("seatCodes"));
 		Time showTime = Time.valueOf( body.get("showTime").toString());
 		Booking booking = new Booking();
-		booking.setUserId(body.get("userId").toString());
+		booking.setUserId(u.getId());
 		booking.setCalendarId(body.get("calendarId").toString());
 		if(!checkSeats(seatCodes,booking.getCalendarId(),showTime)){
 			return new ResponseEntity<String>("seat incorrect!", HttpStatus.BAD_REQUEST);
@@ -68,7 +86,7 @@ public class BookingController {
 		//payment
 		try {
 			pay.charge(body.get("token").toString(), Double.parseDouble(body.get("amount").toString()), 
-					body.get("cusId").toString(),Integer.parseInt(body.get("save").toString()), body.get("userId").toString());
+					body.get("cusId").toString(),Integer.parseInt(body.get("save").toString()), u.getId());
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -90,6 +108,7 @@ public class BookingController {
 			s.setShowTime(showTime);
 			seatRepository.save(s);
 		}
+		sendBookingDetailMail(b.getId(),u.getEmail());
 		return new ResponseEntity<Booking>(b, HttpStatus.CREATED);
 
 	}
@@ -108,6 +127,10 @@ public class BookingController {
 		return true;
 	}
 
+	public void sendBookingDetailMail(String bookingId, String userMail) {
+		List<String[]> bookingDetail = bookingRepository.getBookingDetail(bookingId);		
+		mail.sendBookingDetailMailTemplate(userMail, "Booking Detail",bookingDetail);
+	}
 //	@PutMapping("/{id}")
 //	public Object post(@PathVariable String id, @RequestBody Catagory catagory) {
 //		

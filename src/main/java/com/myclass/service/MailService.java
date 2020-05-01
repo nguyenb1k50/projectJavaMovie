@@ -2,6 +2,9 @@ package com.myclass.service;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
@@ -57,6 +60,40 @@ public class MailService {
 			helper.setTo(to);
 	        helper.setSubject(subject);
 	        String content = buildActiveMailContent(url,userName);
+	        helper.setText(content, true);
+		} catch (MessagingException | UnsupportedEncodingException e) {
+			
+			e.printStackTrace();
+		}
+		
+        emailSender.send(message);
+    }
+    
+    public String buildBookingDetailMailContent(List<String[]> detail) {
+    	ArrayList<String> detail1 = new ArrayList<>(Arrays.asList(detail.get(0)));
+        Context context = new Context();
+        context.setVariable("bookingId", detail1.get(0));
+        context.setVariable("seats", detail1.get(1));
+        context.setVariable("cinemaName", detail1.get(2));
+        context.setVariable("movieName", detail1.get(3));
+        context.setVariable("date", detail1.get(5)+" "+detail1.get(4) );
+        context.setVariable("userName", detail1.get(6));
+        context.setVariable("address", detail1.get(7));
+        context.setVariable("phone", detail1.get(8));
+        context.setVariable("url", "nhat");
+        return templateEngine.process("bookingDetailMail", context);
+    }
+    
+    public void sendBookingDetailMailTemplate(String to, String subject,List<String[]> detail) {
+    	MimeMessage message = emailSender.createMimeMessage();
+        
+        MimeMessageHelper helper;
+		try {
+			helper = new MimeMessageHelper(message, true);
+			helper.setFrom("cinebookingsystem@abc.com", "Cinema Booking System");
+			helper.setTo(to);
+	        helper.setSubject(subject);
+	        String content = buildBookingDetailMailContent(detail);
 	        helper.setText(content, true);
 		} catch (MessagingException | UnsupportedEncodingException e) {
 			

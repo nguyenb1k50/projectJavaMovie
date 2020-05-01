@@ -6,6 +6,10 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.myclass.dto.UserDto;
 import com.myclass.entity.UserDTO;
 import com.myclass.repository.UserRepository;
+import com.myclass.validate.Authorized;
 
 @RestController
 @RequestMapping("api/user")
@@ -38,10 +43,19 @@ public class UserController {
 		return new ResponseEntity<List<UserDto>>(users, HttpStatus.OK);
 	}
 	
-	@GetMapping("/{id}")
-	public Object get(@PathVariable String id) {
-		UserDTO user = userRepository.findById(id).get();
-		return new ResponseEntity<UserDTO>(user, HttpStatus.OK);
+	@Authorized(role = "user")
+	@GetMapping("/current")
+	public Object getCurentUserInfo() {
+		String currentUserName;
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			currentUserName = authentication.getName();
+		} else {
+			throw new AccessDeniedException("đăng nhâp đi bạn!");
+		}
+		UserDTO u = userRepository.findByUsername(currentUserName);		
+		
+		return new ResponseEntity<UserDTO>(u, HttpStatus.OK);
 	}
 	
 	@GetMapping("/search/{email}/{username}")
