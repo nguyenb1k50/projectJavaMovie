@@ -17,6 +17,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,8 +40,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.myclass.config.StaticCons;
 import com.myclass.entity.Movie;
 import com.myclass.entity.Ratting;
+import com.myclass.entity.UserDTO;
 import com.myclass.repository.MovieRepository;
 import com.myclass.repository.RattingRepository;
+import com.myclass.repository.UserRepository;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -51,7 +57,8 @@ public class MovieController {
 
 	@Autowired
 	RattingRepository rattingRepo;
-
+	@Autowired
+	UserRepository userRepository;
 	@GetMapping("")
 	public Object get(@RequestParam(required = false, defaultValue = "") String showtime) {
 		List<Movie> movies;
@@ -136,7 +143,16 @@ public class MovieController {
 	@PostMapping("/rate")
 	public Object rateMovie(@RequestBody Map<String, String> allParams) {
 		String movieId = allParams.get("movieId");
-		String userId = allParams.get("userId");
+		String currentUserName;
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			currentUserName = authentication.getName();
+		} else {
+			throw new AccessDeniedException("đăng nhâp đi bạn!");
+		}
+		UserDTO u = userRepository.findByUsername(currentUserName);
+		String userId = u.getId(); 
+				//allParams.get("userId");
 		int star = Integer.parseInt(allParams.get("star"));
 		if (StringUtils.isEmpty(movieId) || StringUtils.isEmpty(userId)) {
 			return new ResponseEntity<String>("thieu param", HttpStatus.BAD_REQUEST);

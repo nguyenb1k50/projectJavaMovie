@@ -55,12 +55,14 @@ public class JwtAuthenticationController {
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-
 		final UserDetails userDetails = userDetailsService
 				.loadUserByUsername(authenticationRequest.getUsername());
 
 		final String token = jwtTokenUtil.generateToken(userDetails);
-
+		UserDTO u = userRepository.findByUsername(authenticationRequest.getUsername());
+		if(u.getActive() == false) {
+			return new ResponseEntity<String>("Please verify account's email before log in!",HttpStatus.BAD_REQUEST);
+		}
 		return ResponseEntity.ok(new JwtResponse(token));
 	}
 	
