@@ -235,7 +235,7 @@ public class MovieController {
 	}
 	
 	@DeleteMapping("/deleteCmt/{id}")
-	public Object deleteComment(@PathVariable Long id) {
+	public Object deleteComment(@PathVariable String id) {
 		
 		if(commentRepo.existsById(id)) {
 			commentRepo.deleteById(id);
