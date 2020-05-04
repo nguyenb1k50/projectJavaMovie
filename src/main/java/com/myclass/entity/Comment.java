@@ -1,5 +1,7 @@
 package com.myclass.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -27,6 +29,9 @@ public class Comment {
 		@Column(name = "user_id")
 		private String userId;
 		
+		@Column(name = "CommentDate")
+		private Date commentDate;
+		
 		@ManyToOne
 		@JoinColumn(name = "movie_id", foreignKey = @ForeignKey(name="fk_movie_ratting"),
 		insertable = false, updatable = false)
@@ -42,10 +47,11 @@ public class Comment {
 		@Transient
 		private String userName;
 		
-		public Comment(String comment, String movieId, String userId) {
+		public Comment(String comment, String movieId, String userId, Date commentDate) {
 			this.comment = comment;
 			this.movieId = movieId;
 			this.userId = userId;
+			this.commentDate = commentDate;
 		}
 
 		public Long getId() {
@@ -104,4 +110,13 @@ public class Comment {
 			this.userName = userName;
 		}
 
+		public Date getCommentDate() {
+			return commentDate;
+		}
+
+		public void setCommentDate(Date commentDate) {
+			this.commentDate = commentDate;
+		}
+		
+		
 }

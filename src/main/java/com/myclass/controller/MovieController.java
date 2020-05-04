@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -219,8 +220,7 @@ public class MovieController {
 		}
 		UserDTO currentUser = userRepository.findByUsername(currentUserName);
 		userID = currentUser.getId();
-		Comment Ocomment = commentRepo.save(new Comment(comment, idMovie, userID));
-		
+		Comment Ocomment = commentRepo.save(new Comment(comment, idMovie, userID, new Date()));
 		return new ResponseEntity<Object>(Ocomment, HttpStatus.BAD_REQUEST);
 		
 	}
