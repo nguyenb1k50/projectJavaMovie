@@ -21,7 +21,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.util.StringUtils;
+import org.springframework.security.core.userdetails.User;import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,9 +38,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.myclass.config.StaticCons;
+import com.myclass.entity.Comment;
 import com.myclass.entity.Movie;
 import com.myclass.entity.Ratting;
 import com.myclass.entity.UserDTO;
+import com.myclass.repository.CommentRepository;
 import com.myclass.repository.MovieRepository;
 import com.myclass.repository.RattingRepository;
 import com.myclass.repository.UserRepository;
@@ -59,6 +61,10 @@ public class MovieController {
 	RattingRepository rattingRepo;
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	CommentRepository commentRepo;
+	
 	@GetMapping("")
 	public Object get(@RequestParam(required = false, defaultValue = "") String showtime) {
 		List<Movie> movies;
@@ -82,13 +88,25 @@ public class MovieController {
 
 	@GetMapping("/{id}")
 	public Object getDetail(@PathVariable String id) {
-
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String role = "MEMBER";
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String currentUserName = authentication.getName();
+			UserDTO currentUser = userRepository.findByUsername(currentUserName);
+			if("1".equals(currentUser.getRoleId())) {
+				role = "ADMIN";
+			}
+		} else {
+			throw new AccessDeniedException("đăng nhâp đi bạn!");
+		}
+		
 		Optional<Movie> movieOp = movieRepository.findById(id);
 		if (movieOp.isPresent()) {
 			Movie movie = movieOp.get();
 			movie.setPoster(StaticCons.currentUrl() + movie.getPoster());
 			movie.setImage(StaticCons.currentUrl() + movie.getImage());
 			movie.setStar(rattingRepo.getMovieStar(id));
+			movie.setUserRole(role);
 			return new ResponseEntity<Movie>(movie, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("Id không tồn tại!", HttpStatus.BAD_REQUEST);
@@ -142,6 +160,8 @@ public class MovieController {
 
 	@PostMapping("/rate")
 	public Object rateMovie(@RequestBody Map<String, String> allParams) {
+		
+		
 		String movieId = allParams.get("movieId");
 		String currentUserName;
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -186,4 +206,42 @@ public class MovieController {
 
 		return movies;
 	}
+	
+	@PostMapping("/comment/{idMovie}")
+	public Object comment(@PathVariable String idMovie ,@RequestBody String comment) {
+		String userID = "";
+		String currentUserName = "";
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			currentUserName = authentication.getName();
+		} else {
+			throw new AccessDeniedException("đăng nhâp đi bạn!");
+		}
+		UserDTO currentUser = userRepository.findByUsername(currentUserName);
+		userID = currentUser.getId();
+		Comment Ocomment = commentRepo.save(new Comment(comment, idMovie, userID));
+		
+		return new ResponseEntity<Object>(Ocomment, HttpStatus.BAD_REQUEST);
+		
+	}
+	
+	@GetMapping("/getComment/{idMovie}")
+	public Object getListComment(@PathVariable String idMovie) {
+		
+		List<Comment> listComment = commentRepo.getAllByMovie(idMovie);
+		
+		return new ResponseEntity<Object>(listComment, HttpStatus.BAD_REQUEST);
+		
+	}
+	
+	@DeleteMapping("/deleteCmt/{id}")
+	public Object deleteComment(@PathVariable Long id) {
+		
+		if(commentRepo.existsById(id)) {
+			commentRepo.deleteById(id);
+			return new ResponseEntity<HttpStatus>(HttpStatus.NO_CONTENT);	
+		}
+		return new ResponseEntity<String>("Id không tồn tại!", HttpStatus.BAD_REQUEST);
+	}
+	
 }

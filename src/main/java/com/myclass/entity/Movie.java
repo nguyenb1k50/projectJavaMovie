@@ -85,6 +85,9 @@ public class Movie {
 //	@OneToMany(mappedBy="movie", fetch = FetchType.LAZY)
 //	private List<Ratting> ratting;
 	
+	@Transient
+	private String userRole;
+	
     public String[] getActors() {
         return actors;
     }
@@ -224,7 +227,14 @@ public class Movie {
 		this.imdbRating = imdbRating;
 	}
 
+	public String getUserRole() {
+		return userRole;
+	}
 
-	
+	public void setUserRole(String userRole) {
+		this.userRole = userRole;
+	}
+
+
 
 }
