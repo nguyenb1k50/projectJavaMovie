@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.ToString;
 
 @ToString
-@Builder
 public class ErrorObject {
 
 	public List<Object> fieldErrors;
