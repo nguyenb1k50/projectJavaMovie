@@ -53,6 +53,10 @@ public class Comment {
 			this.userId = userId;
 			this.commentDate = commentDate;
 		}
+			
+		public Comment() {
+			super();
+		}
 
 		public Long getId() {
 			return id;
@@ -103,6 +107,7 @@ public class Comment {
 		}
 
 		public String getUserName() {
+			this.userName = user.getUsername();
 			return userName;
 		}
 

@@ -208,7 +208,8 @@ public class MovieController {
 	}
 	
 	@PostMapping("/comment/{idMovie}")
-	public Object comment(@PathVariable String idMovie ,@RequestBody String comment) {
+	public Object comment(@PathVariable String idMovie ,@RequestBody Map<String, String> param) {
+		String comment = param.get("comment");
 		String userID = "";
 		String currentUserName = "";
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -220,7 +221,7 @@ public class MovieController {
 		UserDTO currentUser = userRepository.findByUsername(currentUserName);
 		userID = currentUser.getId();
 		Comment Ocomment = commentRepo.save(new Comment(comment, idMovie, userID, new Date()));
-		return new ResponseEntity<Object>(Ocomment, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Object>(Ocomment, HttpStatus.OK);
 		
 	}
 	
@@ -228,13 +229,12 @@ public class MovieController {
 	public Object getListComment(@PathVariable String idMovie) {
 		
 		List<Comment> listComment = commentRepo.getAllByMovie(idMovie);
-		
-		return new ResponseEntity<Object>(listComment, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Object>(listComment, HttpStatus.OK);
 		
 	}
 	
 	@DeleteMapping("/deleteCmt/{id}")
-	public Object deleteComment(@PathVariable String id) {
+	public Object deleteComment(@PathVariable Long id) {
 		
 		if(commentRepo.existsById(id)) {
 			commentRepo.deleteById(id);
