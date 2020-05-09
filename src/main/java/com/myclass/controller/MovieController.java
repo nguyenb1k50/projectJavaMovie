@@ -209,7 +209,8 @@ public class MovieController {
 	}
 	
 	@PostMapping("/comment/{idMovie}")
-	public Object comment(@PathVariable String idMovie ,@RequestBody String comment) {
+	public Object comment(@PathVariable String idMovie ,@RequestBody Map<String, String> param) {
+		String comment = param.get("comment");
 		String userID = "";
 		String currentUserName = "";
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -234,7 +235,7 @@ public class MovieController {
 	}
 	
 	@DeleteMapping("/deleteCmt/{id}")
-	public Object deleteComment(@PathVariable String id) {
+	public Object deleteComment(@PathVariable Long id) {
 		
 		if(commentRepo.existsById(id)) {
 			commentRepo.deleteById(id);

@@ -9,8 +9,9 @@ import org.springframework.stereotype.Repository;
 import com.myclass.entity.Comment;
 
 @Repository
-public interface CommentRepository extends JpaRepository<Comment, String>{
-		
+public interface CommentRepository extends JpaRepository<Comment, Long>{
+	
+	boolean existsById(Long id);
 	@Query("SELECT c FROM Comment c WHERE c.movieId = :idMovie")
 	List<Comment> getAllByMovie(@Param("idMovie") String idMovie);
 }
