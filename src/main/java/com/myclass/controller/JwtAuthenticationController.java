@@ -91,11 +91,11 @@ public class JwtAuthenticationController {
 			user.setActive(true);
 			user.setActiveToken("");
 			userRepository.save(user);
-			return new ModelAndView("/VerifyEmailSuccess");
+			return new ModelAndView("VerifyEmailSuccess");
 			//return new ResponseEntity<>("Your account has been actived!",HttpStatus.OK);
 		}
 		else
-			return new ModelAndView("/VerifyEmailSuccess");
+			return new ModelAndView("VerifyEmailSuccess");
 			//return new ResponseEntity<>("Invalid request!",HttpStatus.BAD_REQUEST);
 	}
 }
