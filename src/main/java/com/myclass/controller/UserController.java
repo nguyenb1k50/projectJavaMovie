@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -19,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.myclass.config.StaticCons;
 import com.myclass.dto.UserDto;
+import com.myclass.entity.Movie;
 import com.myclass.entity.UserDTO;
 import com.myclass.repository.UserRepository;
 import com.myclass.validate.Authorized;
@@ -43,7 +46,7 @@ public class UserController {
 		return new ResponseEntity<List<UserDto>>(users, HttpStatus.OK);
 	}
 	
-	@Authorized(role = "user")
+	//@Authorized(role = "user")
 	@GetMapping("/current")
 	public Object getCurentUserInfo() {
 		String currentUserName;
@@ -79,8 +82,11 @@ public class UserController {
 	public Object post(@PathVariable String id, @RequestBody UserDTO user) {
 		
 		if(userRepository.existsById(id)) {
-			user.setId(id);
-			UserDTO entity = userRepository.save(user);
+			UserDTO u = userRepository.findById(id).get();
+			//for update partial property
+			StaticCons.copyNonNullProperties(user, u);
+			
+			UserDTO entity = userRepository.save(u);
 			return new ResponseEntity<UserDTO>(entity, HttpStatus.OK);	
 		}
 		return new ResponseEntity<String>("Id không tồn tại!", HttpStatus.BAD_REQUEST);
@@ -94,5 +100,14 @@ public class UserController {
 			return new ResponseEntity<HttpStatus>(HttpStatus.NO_CONTENT);	
 		}
 		return new ResponseEntity<String>("Id không tồn tại!", HttpStatus.BAD_REQUEST);
+	}
+	
+	@GetMapping("/updateStatus/{id}")
+	public Object updateUserStatus(@PathVariable String id) {
+		UserDTO u = userRepository.findById(id).get();
+		boolean flag = u.getActive() == true ? false : true ;
+		u.setActive(flag);
+		userRepository.save(u);
+		return new ResponseEntity<UserDTO>(u, HttpStatus.OK);
 	}
 }
