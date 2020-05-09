@@ -221,7 +221,7 @@ public class MovieController {
 		UserDTO currentUser = userRepository.findByUsername(currentUserName);
 		userID = currentUser.getId();
 		Comment Ocomment = commentRepo.save(new Comment(comment, idMovie, userID, new Date()));
-		return new ResponseEntity<Object>(Ocomment, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Object>(Ocomment, HttpStatus.OK);
 		
 	}
 	
@@ -229,8 +229,7 @@ public class MovieController {
 	public Object getListComment(@PathVariable String idMovie) {
 		
 		List<Comment> listComment = commentRepo.getAllByMovie(idMovie);
-		
-		return new ResponseEntity<Object>(listComment, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Object>(listComment, HttpStatus.OK);
 		
 	}
 	
