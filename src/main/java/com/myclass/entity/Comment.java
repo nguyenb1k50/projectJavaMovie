@@ -107,7 +107,9 @@ public class Comment {
 		}
 
 		public String getUserName() {
-			this.userName = user.getUsername();
+			if(user != null) {
+				this.userName = user.getUsername();
+			}
 			return userName;
 		}
 
