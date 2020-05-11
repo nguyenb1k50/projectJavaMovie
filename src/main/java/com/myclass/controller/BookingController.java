@@ -1,8 +1,12 @@
 package com.myclass.controller;
 
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +31,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.myclass.config.StaticCons;
+import com.myclass.dto.excelDTO;
 import com.myclass.entity.Booking;
 import com.myclass.entity.Catagory;
 import com.myclass.entity.Seat;
@@ -37,6 +43,7 @@ import com.myclass.repository.BookingRepository;
 import com.myclass.repository.CatagoryRepository;
 import com.myclass.repository.SeatRepository;
 import com.myclass.repository.UserRepository;
+import com.myclass.service.ExcelReportView;
 import com.myclass.service.MailService;
 
 @RestController
@@ -53,6 +60,7 @@ public class BookingController {
 	private MailService mail;
 	@Autowired
 	UserRepository userRepository;
+
 	@GetMapping("")
 	public Object get() {
 		List<Booking> b = bookingRepository.getAllBooking();
@@ -61,7 +69,7 @@ public class BookingController {
 
 	@GetMapping("/seats/{calendarId}")
 	public Object get(@PathVariable String calendarId, @RequestParam Time showTime) {
-		List<String> b = seatRepository.getAlreadyBookingSeat(calendarId,showTime);
+		List<String> b = seatRepository.getAlreadyBookingSeat(calendarId, showTime);
 		return new ResponseEntity<List<String>>(b, HttpStatus.OK);
 	}
 
@@ -75,18 +83,18 @@ public class BookingController {
 			throw new AccessDeniedException("đăng nhâp đi bạn!");
 		}
 		UserDTO u = userRepository.findByUsername(currentUserName);
-		ArrayList<String> seatCodes = (ArrayList<String>)(body.get("seatCodes"));
-		Time showTime = Time.valueOf( body.get("showTime").toString());
+		ArrayList<String> seatCodes = (ArrayList<String>) (body.get("seatCodes"));
+		Time showTime = Time.valueOf(body.get("showTime").toString());
 		Booking booking = new Booking();
 		booking.setUserId(u.getId());
 		booking.setCalendarId(body.get("calendarId").toString());
-		if(!checkSeats(seatCodes,booking.getCalendarId(),showTime)){
+		if (!checkSeats(seatCodes, booking.getCalendarId(), showTime)) {
 			return new ResponseEntity<String>("seat incorrect!", HttpStatus.BAD_REQUEST);
 		}
-		//payment
+		// payment
 		try {
-			pay.charge(body.get("token").toString(), Double.parseDouble(body.get("amount").toString()), 
-					body.get("cusId").toString(),Integer.parseInt(body.get("save").toString()), u.getId());
+			pay.charge(body.get("token").toString(), Double.parseDouble(body.get("amount").toString()),
+					body.get("cusId").toString(), Integer.parseInt(body.get("save").toString()), u.getId());
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -108,14 +116,32 @@ public class BookingController {
 			s.setShowTime(showTime);
 			seatRepository.save(s);
 		}
-		sendBookingDetailMail(b.getId(),u.getEmail());
+		sendBookingDetailMail(b.getId(), u.getEmail());
 		return new ResponseEntity<Booking>(b, HttpStatus.CREATED);
 
 	}
 
+	@GetMapping("/report")
+	public ModelAndView getExcel() {
+		Date date = new Date();
+		LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		int month = localDate.getMonthValue();
+		int year = localDate.getYear();
+		ExcelReportView ex = new ExcelReportView("System cinema report " + month + "-" + year, "systemcinemareport");
+		//report 1		
+		List<String[]> data = bookingRepository.getListHotestMovie();
+        ex.addStaticAttribute("report1", data);
+        //report 2
+//        List<excelDTO> data2 = new ArrayList<excelDTO>(); 
+//        data2.add(new excelDTO("2", "Sri", "12344","d"));
+//        data2.add(new excelDTO("2", "Dharan", "658","d"));
+//        ex.addStaticAttribute("report2", data2);
+		return new ModelAndView(ex);
+	}
+
 	public boolean checkSeats(ArrayList<String> seatCodes, String calendarId, Time showTime) {
 		Iterator<String> seat = seatCodes.iterator();
-		ArrayList<String> bookedSeats = seatRepository.getAlreadyBookingSeat(calendarId,showTime);
+		ArrayList<String> bookedSeats = seatRepository.getAlreadyBookingSeat(calendarId, showTime);
 		while (seat.hasNext()) {
 			String c = seat.next();
 			boolean a = StaticCons.seatCode.contains(c);
@@ -128,29 +154,8 @@ public class BookingController {
 	}
 
 	public void sendBookingDetailMail(String bookingId, String userMail) {
-		List<String[]> bookingDetail = bookingRepository.getBookingDetail(bookingId);		
-		mail.sendBookingDetailMailTemplate(userMail, "Booking Detail",bookingDetail);
+		List<String[]> bookingDetail = bookingRepository.getBookingDetail(bookingId);
+		mail.sendBookingDetailMailTemplate(userMail, "Booking Detail", bookingDetail);
 	}
-//	@PutMapping("/{id}")
-//	public Object post(@PathVariable String id, @RequestBody Catagory catagory) {
-//		
-//		if(catagoryRepository.existsById(id)) {
-//			catagory.setId(id);
-//			Catagory entity = catagoryRepository.save(catagory);
-//			return new ResponseEntity<Catagory>(entity, HttpStatus.OK);	
-//		}
-//		return new ResponseEntity<String>("Id không tồn tại!", HttpStatus.BAD_REQUEST);
-//	}
-//	
-//	
-//	@DeleteMapping("/{id}")
-//	public Object delete(@PathVariable String id) {
-//		
-//		if(catagoryRepository.existsById(id)) {
-//			catagoryRepository.deleteById(id);
-//			return new ResponseEntity<HttpStatus>(HttpStatus.NO_CONTENT);	
-//		}
-//		return new ResponseEntity<String>("Id không tồn tại!", HttpStatus.BAD_REQUEST);
-//	}
 
 }

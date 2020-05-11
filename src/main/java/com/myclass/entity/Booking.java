@@ -1,5 +1,7 @@
 package com.myclass.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -31,7 +33,8 @@ public class Booking {
 	@JoinColumn(name = "calendar_id", foreignKey = @ForeignKey(name = "fk_calendar_booking"), insertable = false, updatable = false)
 	@JsonIgnore
 	private Calendar calendar;
-
+	
+	private Date createDate;
 	public String getId() {
 		return id;
 	}
@@ -58,6 +61,7 @@ public class Booking {
 
 	public Booking() {
 		super();
+		this.createDate = new Date();
 	}
 
 	public String getCalendarId() {

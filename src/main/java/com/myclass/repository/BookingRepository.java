@@ -2,6 +2,7 @@ package com.myclass.repository;
 
 import org.springframework.stereotype.Repository;
 
+import com.myclass.dto.excelDTO;
 import com.myclass.entity.Booking;
 import com.myclass.entity.Calendar;
 
@@ -32,4 +33,16 @@ public interface BookingRepository extends JpaRepository<Booking, String>{
 			+ "and b.id = :bookingId "
 			+ "group by s.show_time" , nativeQuery = true)
 	List<String[]> getBookingDetail(@Param("bookingId") String bookingId);
+	
+	@Query(value =  "SELECT m.title, count(s.id) "
+			+ "from bookings b, seats s, movies m, calendars c "
+			+ "where s.booking_id = b.id "
+			+ "and c.movie_id = m.id "
+			+ "and b.calendar_id = c.id "
+			+ "and year(b.create_date) = year(curdate()) "
+			+ "and month(b.create_date) = month(curdate()) "
+			+ "group by m.id "
+			+ "order by count(s.id) desc "
+			+ "limit 3" , nativeQuery = true)
+	List<String[]> getListHotestMovie();
 }

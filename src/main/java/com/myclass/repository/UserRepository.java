@@ -19,6 +19,9 @@ public interface UserRepository extends JpaRepository<UserDTO, String> {
 	
 	UserDTO findByAddress(String address);
 	
+	@Query("SELECT u FROM UserDTO u WHERE u.roleId = 2")
+	List<UserDTO> getAllUser();
+	
 	@Query("SELECT u FROM UserDTO u WHERE u.username = :name OR u.email = :email")
 	List<UserDTO> search(@Param("name")  String username, @Param("email") String email);
 	
