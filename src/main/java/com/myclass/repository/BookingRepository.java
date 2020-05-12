@@ -41,7 +41,7 @@ public interface BookingRepository extends JpaRepository<Booking, String>{
 			+ "and cal.cinemar_id = c.id "
 			+ "and cal.movie_id = m.id "
 			+ "and b.user_id = u.id "
-			+ "group by s.show_time" , nativeQuery = true)
+			+ "group by s.show_time, b.id" , nativeQuery = true)
 	List<String[]> getBookingList();
 	
 	@Query(value =  "SELECT m.title, count(s.id) "
