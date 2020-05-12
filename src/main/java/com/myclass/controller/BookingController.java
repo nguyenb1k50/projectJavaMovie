@@ -132,11 +132,21 @@ public class BookingController {
 		List<String[]> data = bookingRepository.getListHotestMovie();
         ex.addStaticAttribute("report1", data);
         //report 2
-//        List<excelDTO> data2 = new ArrayList<excelDTO>(); 
-//        data2.add(new excelDTO("2", "Sri", "12344","d"));
-//        data2.add(new excelDTO("2", "Dharan", "658","d"));
-//        ex.addStaticAttribute("report2", data2);
+        List<String[]> data2 = bookingRepository.getMostViewTimeFrame();
+        ex.addStaticAttribute("report2", data2);
 		return new ModelAndView(ex);
+	}
+	
+	@GetMapping("/report/hotmovie")
+	public Object report1() {
+		
+		return new ResponseEntity<List<String[]>>(bookingRepository.getListHotestMovie(), HttpStatus.OK);
+	}
+	
+	@GetMapping("/report/mostviewtime")
+	public Object report2() {
+		
+		return new ResponseEntity<List<String[]>>(bookingRepository.getMostViewTimeFrame(), HttpStatus.OK);
 	}
 
 	public boolean checkSeats(ArrayList<String> seatCodes, String calendarId, Time showTime) {

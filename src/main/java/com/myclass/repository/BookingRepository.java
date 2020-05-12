@@ -45,4 +45,18 @@ public interface BookingRepository extends JpaRepository<Booking, String>{
 			+ "order by count(s.id) desc "
 			+ "limit 3" , nativeQuery = true)
 	List<String[]> getListHotestMovie();
+	
+	@Query(value =  "select '08:00 - 16:00', count(s.id) as a\r\n" + 
+			"from seats s\r\n" + 
+			"where '08:00:00' <= s.show_time and s.show_time <= '15:59:00'\r\n" + 
+			"union\r\n" + 
+			"select '16:00 - 24:00',count(s.id) as a\r\n" + 
+			"from seats s\r\n" + 
+			"where '16:00:00' <= s.show_time and s.show_time <= '23:59:00'\r\n" + 
+			"union\r\n" + 
+			"select '24:00 - 08:00',count(s.id) as a\r\n" + 
+			"from seats s\r\n" + 
+			"where '00:00:00' <= s.show_time and s.show_time <= '07:59:00'\r\n" + 
+			"order by a desc" , nativeQuery = true)
+	List<String[]> getMostViewTimeFrame();
 }

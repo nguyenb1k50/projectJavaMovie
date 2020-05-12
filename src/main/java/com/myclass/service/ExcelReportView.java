@@ -28,7 +28,7 @@ public class ExcelReportView extends AbstractXlsView {
 
 		response.setHeader("Content-Disposition", "attachment;filename=\""+fileName+".xls\"");
 		List<String[]> report1 = (List<String[]>) model.get("report1");
-	//	List<excelDTO> report2 = (List<excelDTO>) model.get("report2");
+		List<String[]> report2 = (List<String[]>) model.get("report2");
 		Sheet sheet = workbook.createSheet(sheetName);
 		//report1
 		sheet.addMergedRegion(new CellRangeAddress(0,0,0,3));
@@ -48,21 +48,22 @@ public class ExcelReportView extends AbstractXlsView {
 	        }	        
 		rowNum++;
 		//report2
-//		sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,0,3));
-//		Row report2Name = sheet.createRow(rowNum);
-//		report2Name.createCell(0).setCellValue("Report 2");	
-//		rowNum++;
-//		Row header2 = sheet.createRow(rowNum);
-//		header2.createCell(0).setCellValue("col1");
-//		header2.createCell(1).setCellValue("col2");
-//		header2.createCell(2).setCellValue("col3");
-//		rowNum++;
-//		for (excelDTO item : report2) {
-//			Row row = sheet.createRow(rowNum++);
-//			row.createCell(0).setCellValue(item.getCol1());
-//			row.createCell(1).setCellValue(item.getCol2());
-//			row.createCell(2).setCellValue(item.getCol3());
-//		}
+		sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,0,3));
+		Row report2Name = sheet.createRow(rowNum);
+		report2Name.createCell(0).setCellValue("Most view time frame");	
+		rowNum++;
+		Row header2 = sheet.createRow(rowNum);
+		header2.createCell(0).setCellValue("Time frame");
+		header2.createCell(1).setCellValue("Number of seats purchased");
+		rowNum++;
+		Iterator<String[]> report2List = report2.iterator();
+        while (report2List.hasNext()) {
+        	Row row = sheet.createRow(rowNum++);
+           // System.out.println(report2List.next());
+            ArrayList<String> item =  new ArrayList<>(Arrays.asList(report2List.next()));
+            row.createCell(0).setCellValue(item.get(0));
+			row.createCell(1).setCellValue(item.get(1));
+        }	
 	}
 
 	public ExcelReportView(String sheetName, String fileName) {

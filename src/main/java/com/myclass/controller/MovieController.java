@@ -185,7 +185,7 @@ public class MovieController {
 		}
 
 		if (rate != null) {
-			return new ResponseEntity<String>("user da rate phim nay roi", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>("You already rate this movie!", HttpStatus.BAD_REQUEST);
 		}
 		try {
 			rate = rattingRepo.save(new Ratting(movieId, userId, star));
