@@ -63,8 +63,8 @@ public class BookingController {
 
 	@GetMapping("")
 	public Object get() {
-		List<Booking> b = bookingRepository.getAllBooking();
-		return new ResponseEntity<List<Booking>>(b, HttpStatus.OK);
+		List<String[]> b = bookingRepository.getBookingList();
+		return new ResponseEntity<List<String[]>>(b, HttpStatus.OK);
 	}
 
 	@GetMapping("/seats/{calendarId}")

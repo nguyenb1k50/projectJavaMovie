@@ -34,6 +34,16 @@ public interface BookingRepository extends JpaRepository<Booking, String>{
 			+ "group by s.show_time" , nativeQuery = true)
 	List<String[]> getBookingDetail(@Param("bookingId") String bookingId);
 	
+	@Query(value =  "SELECT b.id, GROUP_CONCAT(s.seat_code SEPARATOR ', ') as seats, c.cinemar_name, m.title, s.show_time,cal.open_date, u.username,u.email,u.address,u.phone "
+			+ "from bookings b, seats s, cinemas c, movies m, users u,calendars cal "
+			+ "where b.id = s.booking_id "
+			+ "and b.calendar_id = cal.id "
+			+ "and cal.cinemar_id = c.id "
+			+ "and cal.movie_id = m.id "
+			+ "and b.user_id = u.id "
+			+ "group by s.show_time" , nativeQuery = true)
+	List<String[]> getBookingList();
+	
 	@Query(value =  "SELECT m.title, count(s.id) "
 			+ "from bookings b, seats s, movies m, calendars c "
 			+ "where s.booking_id = b.id "
