@@ -41,7 +41,7 @@ public class ExcelReportView extends AbstractXlsView {
 		 Iterator<String[]> report1List = report1.iterator();
 	        while (report1List.hasNext()) {
 	        	Row row = sheet.createRow(rowNum++);
-	            System.out.println(report1List.next());
+//	            System.out.println(report1List.next());
 	            ArrayList<String> item =  new ArrayList<>(Arrays.asList(report1List.next()));
 	            row.createCell(0).setCellValue(item.get(0));
 				row.createCell(1).setCellValue(item.get(1));
