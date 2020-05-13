@@ -69,4 +69,14 @@ public interface BookingRepository extends JpaRepository<Booking, String>{
 			"where '00:00:00' <= s.show_time and s.show_time <= '07:59:00'\r\n" + 
 			"order by a desc" , nativeQuery = true)
 	List<String[]> getMostViewTimeFrame();
+	
+	@Query(value =  "select b.user_id,u.username, count(s.id) as a\r\n" + 
+			"from bookings b, seats s,users u\r\n" + 
+			"where s.booking_id = b.id\r\n" + 
+			"and b.user_id = u.id\r\n" + 
+			"and year(b.create_date) = year(curdate())\r\n" + 
+			"and month(b.create_date) = month(curdate())\r\n" + 
+			"group by b.user_id\r\n" + 
+			"order by a desc" , nativeQuery = true)
+	List<String[]> getMostPurchasedCus();
 }

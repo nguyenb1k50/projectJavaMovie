@@ -128,25 +128,34 @@ public class BookingController {
 		int month = localDate.getMonthValue();
 		int year = localDate.getYear();
 		ExcelReportView ex = new ExcelReportView("System cinema report " + month + "-" + year, "systemcinemareport");
-		//report 1		
+		// report 1
 		List<String[]> data = bookingRepository.getListHotestMovie();
-        ex.addStaticAttribute("report1", data);
-        //report 2
-        List<String[]> data2 = bookingRepository.getMostViewTimeFrame();
-        ex.addStaticAttribute("report2", data2);
+		ex.addStaticAttribute("report1", data);
+		// report 2
+		List<String[]> data2 = bookingRepository.getMostViewTimeFrame();
+		ex.addStaticAttribute("report2", data2);
+		// report 3
+		List<String[]> data3 = bookingRepository.getMostPurchasedCus();
+		ex.addStaticAttribute("report3", data3);
 		return new ModelAndView(ex);
 	}
-	
+
 	@GetMapping("/report/hotmovie")
 	public Object report1() {
-		
+
 		return new ResponseEntity<List<String[]>>(bookingRepository.getListHotestMovie(), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/report/mostviewtime")
 	public Object report2() {
-		
+
 		return new ResponseEntity<List<String[]>>(bookingRepository.getMostViewTimeFrame(), HttpStatus.OK);
+	}
+	
+	@GetMapping("/report/mostpurchasedcus")
+	public Object report3() {
+
+		return new ResponseEntity<List<String[]>>(bookingRepository.getMostPurchasedCus(), HttpStatus.OK);
 	}
 
 	public boolean checkSeats(ArrayList<String> seatCodes, String calendarId, Time showTime) {
