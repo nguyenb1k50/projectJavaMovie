@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myclass.entity.Calendar;
@@ -31,8 +32,15 @@ public class CalendarController {
 	CalendarRepository calendarRepository;
 	
 	@GetMapping("")
-	public Object get() {
-		List<Calendar> calenders = calendarRepository.getAllCalendar();
+	public Object get(@RequestParam(required = false ,defaultValue = "0") double userLat, 
+			@RequestParam(required = false, defaultValue = "0") double userLng ) {
+		List<Calendar> calenders;
+		if(userLat != 0.0 && userLng != 0.0) {
+			calenders = calendarRepository.getCalendarwithLocation(userLat, userLng);
+		}else {
+			calenders = calendarRepository.getAllCalendar();
+		}
+		//List<Calendar> calenders = calendarRepository.getAllCalendar();
 		for(Calendar c : calenders)
 		{
 			Movie m = c.getMovie();
