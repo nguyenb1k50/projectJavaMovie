@@ -1,5 +1,6 @@
 package com.myclass.controller;
 
+import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -62,6 +63,8 @@ public class CalendarController {
 			Iterator<Time> listTime = cal.getTime().iterator();
 			while (listTime.hasNext()) {
 				int movieDuration = (cal.getMovie().getDuration()+15) * 60000;
+				Date movieOpen = cal.getMovie().getOpenDate();
+				Date movieClose = cal.getMovie().getCloseDate();
 				Long from = listTime.next().getTime();				
 				Long end = from +movieDuration;
 				Iterator<Time> listNewTime = calender.getTime().iterator();
@@ -69,7 +72,10 @@ public class CalendarController {
 					Long newTime = listNewTime.next().getTime();
 					//check new time
 					if(newTime >= from && newTime <= end || newTime+movieDuration >= from && newTime+movieDuration <= end) {
-						return new ResponseEntity<String>("trung gio chieu!!!", HttpStatus.BAD_REQUEST);
+						return new ResponseEntity<String>("Existed show time!!!", HttpStatus.BAD_REQUEST);
+					}
+					if(calender.getOpenDate().before(movieOpen)  || calender.getOpenDate().after(movieClose)) {
+						return new ResponseEntity<String>("Date invalid!!!", HttpStatus.BAD_REQUEST);
 					}
 				}
 			}
